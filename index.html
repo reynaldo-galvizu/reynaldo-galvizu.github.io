@@ -1,0 +1,1377 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="CV online de Reynaldo Galvizu Sánchez — Estudiante de Ingeniería Informática (UOC). Buscando prácticas / junior." />
+  <meta name="author" content="Reynaldo Galvizu Sánchez" />
+  <title>Reynaldo Galvizu Sánchez · CV (UOC)</title>
+
+  <!-- =========================================================
+    INDEX ÚNICO (HTML + CSS)
+    - Sin dependencias externas (sin Bootstrap, sin FontAwesome, sin JS)
+    - Inspirado en estructura tipo “Triple P”: Hero → Perfil → About → Skills → Formación (tabs) → Timeline → Proyectos → Contacto
+    - Foto incrustada en base64 (WebP optimizada)
+    - Comentarios “EDITA:” para modificar fácilmente en el futuro
+  ========================================================== -->
+
+  <style>
+    /* ==========================================================
+       0) VARIABLES (EDITA: aquí cambias el look completo)
+    ========================================================== */
+    :root{
+      --bg0:#070a14;
+      --bg1:#0a1630;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.10);
+      --stroke: rgba(255,255,255,.14);
+
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --soft: rgba(255,255,255,.55);
+
+      --accent: #196fc2;      /* azul */
+      --accent2:#00d1ff;      /* cian */
+      --accent3:#ff3ea5;      /* rosa */
+      --good:  #47ffb0;       /* verde */
+
+      --shadow: 0 18px 65px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+
+      --max: 1120px;
+      --gap: 22px;
+
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+    }
+
+    /* ==========================================================
+       1) BASE / RESET
+    ========================================================== */
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% 0%, rgba(0,209,255,.12), transparent 60%),
+        radial-gradient(900px 650px at 90% 10%, rgba(255,62,165,.10), transparent 60%),
+        radial-gradient(1000px 800px at 50% 120%, rgba(25,111,194,.12), transparent 65%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+    h1,h2,h3{margin:0; line-height:1.1; letter-spacing:-.02em}
+    p{margin:0 0 1rem; color:var(--muted)}
+    ul{margin:0; padding-left:18px}
+    li{margin:6px 0; color:var(--muted)}
+    ::selection{background: rgba(0,209,255,.25)}
+
+    /* Fondo “grain” suave */
+    .noise{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-1;
+      opacity:.12;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+    }
+
+    /* ==========================================================
+       2) CONTENEDOR
+    ========================================================== */
+    .container{
+      width:min(var(--max), 100% - 40px);
+      margin:0 auto;
+    }
+    @media (max-width: 760px){
+      .container{width:min(var(--max), 100% - 26px);}
+    }
+
+    /* ==========================================================
+       3) NAV (sin JS) - checkbox hack
+    ========================================================== */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:999;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(10,22,48,.72), rgba(10,22,48,.45));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .topbar-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 0;
+      gap: 14px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      letter-spacing:-.03em;
+      font-size:1.05rem;
+      user-select:none;
+    }
+    .logo-badge{
+      width:36px; height:36px; border-radius:12px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(0,209,255,.28), rgba(255,62,165,.22));
+      border: 1px solid rgba(0,209,255,.25);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      font-family: var(--mono);
+    }
+
+    .nav-toggle{
+      display:none;
+    }
+    .burger{
+      display:none;
+      width:42px; height:42px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      user-select:none;
+    }
+    .burger span{
+      display:block;
+      width:18px; height:2px;
+      background: rgba(255,255,255,.86);
+      position:relative;
+    }
+    .burger span::before,
+    .burger span::after{
+      content:"";
+      position:absolute;
+      left:0;
+      width:18px; height:2px;
+      background: rgba(255,255,255,.86);
+    }
+    .burger span::before{ top:-6px; }
+    .burger span::after{ top: 6px; }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .nav a{
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: rgba(255,255,255,.86);
+      font-weight:800;
+      font-size:.94rem;
+      transition: .2s ease;
+    }
+    .nav a:hover{
+      border-color: rgba(0,209,255,.22);
+      background: rgba(255,255,255,.06);
+      transform: translateY(-1px);
+    }
+
+    .nav-cta{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-left: 10px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-weight:900;
+      letter-spacing:.01em;
+      transition:.2s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.26);
+      transform: translateY(-1px);
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(0,209,255,.22), rgba(255,62,165,.18));
+      border-color: rgba(0,209,255,.30);
+    }
+
+    /* Mobile nav */
+    @media (max-width: 960px){
+      .burger{display:flex;}
+      .nav{
+        position:absolute;
+        left:0; right:0;
+        top: 100%;
+        background: rgba(10,22,48,.92);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255,255,255,.12);
+        padding: 12px 18px;
+        display:grid;
+        gap: 8px;
+        transform: translateY(-8px);
+        opacity:0;
+        pointer-events:none;
+        transition: .2s ease;
+      }
+      .nav-cta{ margin-left:0; flex-wrap:wrap; }
+      .nav-toggle:checked ~ .nav{
+        transform: translateY(0);
+        opacity:1;
+        pointer-events:auto;
+      }
+    }
+
+    /* ==========================================================
+       4) HERO (Portada)
+    ========================================================== */
+    .hero{
+      position:relative;
+      padding: 64px 0 42px;
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(1000px 520px at 10% 0%, rgba(0,209,255,.22), transparent 60%),
+        radial-gradient(900px 520px at 90% 15%, rgba(255,62,165,.18), transparent 62%),
+        linear-gradient(120deg, #0b0f1f 0%, #0e2344 45%, #071a2b 100%);
+      z-index:-2;
+    }
+    .hero::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.55));
+      z-index:-1;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 34px;
+      align-items:center;
+    }
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns:1fr; }
+    }
+
+    .avatar{
+      width: 122px;
+      height: 122px;
+      border-radius: 999px;
+      border: 4px solid rgba(255,255,255,.95);
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      object-fit:cover;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .hero h1{
+      font-size: clamp(2.1rem, 4vw, 3.1rem);
+      font-weight: 950;
+      letter-spacing:-.05em;
+      margin-bottom: 10px;
+    }
+
+    .kicker{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.86);
+      font-weight: 900;
+      font-size:.88rem;
+      letter-spacing:.01em;
+    }
+    .dot{
+      width:10px; height:10px;
+      border-radius:99px;
+      background: linear-gradient(180deg, var(--accent2), var(--accent3));
+      box-shadow: 0 0 0 5px rgba(0,209,255,.10);
+    }
+
+    .lead{
+      font-size: 1.06rem;
+      max-width: 70ch;
+      color: rgba(255,255,255,.80);
+      margin-bottom: 18px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .hero-card{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .hero-card h3{
+      font-size: 1.05rem;
+      font-weight: 950;
+      margin-bottom: 10px;
+    }
+    .facts{
+      display:grid;
+      gap: 10px;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+    .facts b{ color: rgba(255,255,255,.88); }
+    .facts .item{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+    .icon{
+      width: 26px;
+      height: 26px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      background: rgba(0,209,255,.12);
+      border: 1px solid rgba(0,209,255,.18);
+      flex: 0 0 auto;
+    }
+    .muted{ color: var(--soft); }
+
+    .down{
+      display:flex;
+      justify-content:center;
+      padding: 18px 0 0;
+    }
+    .down a{
+      width: 46px; height:46px;
+      border-radius: 999px;
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      transition:.2s ease;
+    }
+    .down a:hover{ transform: translateY(2px); background: rgba(255,255,255,.10); }
+
+    /* ==========================================================
+       5) SECCIONES
+    ========================================================== */
+    section{
+      padding: 62px 0;
+    }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+      margin-bottom: 22px;
+    }
+    .section-head h2{
+      font-size: clamp(1.5rem, 2.4vw, 2.05rem);
+      font-weight: 950;
+      letter-spacing:-.03em;
+    }
+    .label{
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: rgba(255,255,255,.60);
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      white-space:nowrap;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+    }
+    @media (max-width: 920px){
+      .grid-2{ grid-template-columns:1fr; }
+    }
+
+    .card{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding: 18px;
+      box-shadow: 0 16px 45px rgba(0,0,0,.25);
+      transition:.18s ease;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(0,209,255,.22);
+      background: rgba(255,255,255,.07);
+    }
+    .card h3{
+      font-weight: 950;
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top: 12px;}
+    .tag{
+      font-family: var(--mono);
+      font-size: .86rem;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      white-space:nowrap;
+    }
+    .tag.a{ border-color: rgba(0,209,255,.25); background: rgba(0,209,255,.10); }
+    .tag.b{ border-color: rgba(255,62,165,.22); background: rgba(255,62,165,.10); }
+    .tag.c{ border-color: rgba(25,111,194,.25); background: rgba(25,111,194,.10); }
+    .tag.ok{ border-color: rgba(71,255,176,.22); background: rgba(71,255,176,.10); }
+
+    .hr{
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+      margin: 22px 0;
+    }
+
+    /* ==========================================================
+       6) SKILLS (barras)
+    ========================================================== */
+    .skill{
+      display:grid;
+      gap: 8px;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    .skill .row{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .skill b{ font-weight: 950; }
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .bar > span{
+      display:block;
+      height:100%;
+      width: var(--w, 60%);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0,209,255,.90), rgba(255,62,165,.75));
+    }
+
+    /* ==========================================================
+       7) TABS (Formación) - solo CSS
+    ========================================================== */
+    .tabs{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--gap);
+      align-items:start;
+    }
+    @media (max-width: 920px){
+      .tabs{ grid-template-columns:1fr; }
+    }
+
+    .tabs input{ display:none; }
+    .tab-list{
+      display:grid;
+      gap: 10px;
+    }
+    .tab-list label{
+      cursor:pointer;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      font-weight: 950;
+      color: rgba(255,255,255,.88);
+      transition:.18s ease;
+    }
+    .tab-list label:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.08);
+      border-color: rgba(0,209,255,.22);
+    }
+
+    .panels .panel{
+      display:none;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding: 18px;
+      box-shadow: 0 16px 45px rgba(0,0,0,.25);
+    }
+    .panels .panel h3{
+      font-weight: 950;
+      margin-bottom: 10px;
+    }
+    .panels .panel .meta{
+      font-family: var(--mono);
+      font-size: .86rem;
+      color: rgba(255,255,255,.60);
+      margin-bottom: 10px;
+    }
+
+    /* Estados activos de tabs */
+    #tab-uoc:checked ~ .tab-ui .tab-list label[for="tab-uoc"],
+    #tab-actic:checked ~ .tab-ui .tab-list label[for="tab-actic"],
+    #tab-imaq:checked ~ .tab-ui .tab-list label[for="tab-imaq"],
+    #tab-urv:checked ~ .tab-ui .tab-list label[for="tab-urv"],
+    #tab-extra:checked ~ .tab-ui .tab-list label[for="tab-extra"]{
+      border-color: rgba(0,209,255,.28);
+      background: linear-gradient(135deg, rgba(0,209,255,.14), rgba(255,62,165,.10));
+    }
+
+    #tab-uoc:checked ~ .tab-ui .panels #panel-uoc{ display:block; }
+    #tab-actic:checked ~ .tab-ui .panels #panel-actic{ display:block; }
+    #tab-imaq:checked ~ .tab-ui .panels #panel-imaq{ display:block; }
+    #tab-urv:checked ~ .tab-ui .panels #panel-urv{ display:block; }
+    #tab-extra:checked ~ .tab-ui .panels #panel-extra{ display:block; }
+
+    /* ==========================================================
+       8) TIMELINE (Experiencia)
+    ========================================================== */
+    .timeline{
+      position:relative;
+      display:grid;
+      gap: 14px;
+      padding-left: 18px;
+    }
+    .timeline::before{
+      content:"";
+      position:absolute;
+      left: 7px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(0,209,255,.65), rgba(255,62,165,.45));
+      opacity:.7;
+    }
+
+    .t-item{
+      position:relative;
+      padding: 14px 14px 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    .t-item::before{
+      content:"";
+      position:absolute;
+      left:-18px;
+      top: 18px;
+      width: 14px; height:14px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent2), var(--accent3));
+      box-shadow: 0 0 0 6px rgba(0,209,255,.10);
+    }
+    .t-row{
+      display:flex;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap:wrap;
+      margin-bottom: 6px;
+    }
+    .t-role{ font-weight: 950; letter-spacing:-.02em; }
+    .t-when{
+      font-family: var(--mono);
+      font-size:.86rem;
+      color: rgba(255,255,255,.62);
+    }
+    .t-org{
+      color: rgba(255,255,255,.82);
+      font-weight: 850;
+      margin-bottom: 6px;
+    }
+    .t-desc{
+      margin:0;
+      color: var(--muted);
+    }
+
+    /* ==========================================================
+       9) PROYECTOS (grid)
+    ========================================================== */
+    .projects{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--gap);
+    }
+    .project{
+      grid-column: span 4;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+      transition:.18s ease;
+      box-shadow: 0 16px 45px rgba(0,0,0,.25);
+    }
+    .project:hover{
+      transform: translateY(-2px);
+      border-color: rgba(0,209,255,.22);
+      background: rgba(255,255,255,.07);
+    }
+    .thumb{
+      height: 160px;
+      background:
+        radial-gradient(600px 220px at 10% 0%, rgba(0,209,255,.22), transparent 60%),
+        radial-gradient(550px 220px at 90% 10%, rgba(255,62,165,.18), transparent 60%),
+        linear-gradient(135deg, #0b0f1f 0%, #0e2344 55%, #071a2b 100%);
+      position:relative;
+    }
+    .thumb::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 60%);
+    }
+    .project .body{
+      padding: 14px 16px 16px;
+    }
+    .project h3{
+      font-weight: 950;
+      font-size: 1.03rem;
+      margin-bottom: 8px;
+    }
+    .project p{ margin-bottom: 10px; }
+    .project .links{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .link{
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+      font-size:.92rem;
+      transition:.18s ease;
+    }
+    .link:hover{ background: rgba(255,255,255,.10); transform: translateY(-1px); }
+
+    @media (max-width: 980px){
+      .project{ grid-column: span 6; }
+    }
+    @media (max-width: 620px){
+      .project{ grid-column: span 12; }
+    }
+
+    /* ==========================================================
+       10) FOOTER
+    ========================================================== */
+    footer{
+      padding: 30px 0 44px;
+      text-align:center;
+      color: rgba(255,255,255,.55);
+      font-size:.95rem;
+    }
+
+    /* ==========================================================
+       11) PRINT (PDF)
+       - Ctrl/Cmd + P → Guardar como PDF
+    ========================================================== */
+    @page { size: A4; margin: 12mm; }
+
+    @media print{
+      :root{
+        --bg0:#fff; --bg1:#fff;
+        --text:#111; --muted:#333; --soft:#444;
+        --card: rgba(0,0,0,.03);
+        --card2: rgba(0,0,0,.06);
+        --stroke: rgba(0,0,0,.10);
+        --shadow:none;
+      }
+      body{ background:#fff !important; color:#111 !important; }
+      .noise{ display:none !important; }
+      .topbar, .burger, .nav-cta, .down{ display:none !important; }
+      section{ padding: 22px 0; }
+      .hero{ padding: 10px 0 0; }
+      .hero::before, .hero::after{ display:none; }
+      .card, .hero-card, .t-item, .project, .panels .panel{
+        box-shadow:none !important;
+      }
+
+      /* Mostrar TODAS las tabs al imprimir */
+      .panels .panel{ display:block !important; margin-bottom: 12px; }
+      .tab-list{ display:none !important; }
+      .tabs{ grid-template-columns: 1fr; }
+
+      a{ text-decoration:none; color:inherit; }
+      .project{ break-inside: avoid; }
+      .t-item{ break-inside: avoid; }
+      .skill{ break-inside: avoid; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- ==========================================================
+       NAV
+       EDITA: enlaces, logo y CTA si quieres
+  ========================================================== -->
+  <header class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <a class="logo" href="#top" aria-label="Ir al inicio">
+          <span class="logo-badge">RG</span>
+          <span>Reynaldo Galvizu</span>
+        </a>
+
+        <!-- Mobile toggle -->
+        <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-label="Abrir menú" />
+        <label class="burger" for="nav-toggle" aria-hidden="true"><span></span></label>
+
+        <nav class="nav" aria-label="Navegación">
+          <a href="#perfil">Perfil</a>
+          <a href="#uoc">UOC</a>
+          <a href="#skills">Skills</a>
+          <a href="#formacion">Formación</a>
+          <a href="#experiencia">Experiencia</a>
+          <a href="#proyectos">Proyectos</a>
+          <a href="#contacto">Contacto</a>
+
+          <div class="nav-cta">
+            <!-- EDITA: si subes un PDF al repo, pon el nombre aquí -->
+            <a class="btn primary" href="Reynaldo_Galvizu_CV.pdf" download>Descargar PDF</a>
+            <a class="btn" href="mailto:reynaldo.gs@hotmail.com?subject=Contacto%20-%20CV%20Reynaldo%20Galvizu">Email</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================
+       HERO
+       OBJETIVO (1 A): “Estudiante de Ingeniería Informática (UOC) · Buscando prácticas / junior”
+       EXPERIENCIA REDUCIDA (2): aparece más abajo en timeline sin protagonismo
+  ========================================================== -->
+  <main id="top">
+    <section class="hero" aria-label="Portada">
+      <div class="container">
+        <div class="hero-grid">
+
+          <div>
+            <!-- EDITA: Foto (incrustada). Si la cambias:
+                 1) Reemplaza el base64 por otro
+                 2) O usa un archivo: src="assets/foto.webp"
+            -->
+            <img class="avatar"
+                 alt="Foto de Reynaldo Galvizu Sánchez"
+                 src="data:image/webp;base64,UklGRhooAABXRUJQVlA4IA4oAACQ8gCdASqkAaQBPmEulEekIiIpJTCaGSAMCWduuqEBNKxv3P+T213DTt4o5GdYv22Wk1pw7Y9r0o+jujYpKxFLVxd6d8u9DsuWbOVBqv4KxD7stJopdL7E5Hq9Yw+6gG8zj8i7t1y0jKMU0L3r4PqzGx9d0DgG4XyJX9B3w5t1Jr0x9qzj+2g8d+e4yH8GJvQcfTxbHcM9i0n7XK6dY8bM6vYxB1mP1cP8o7lQ4h2H9mAqgk0wqfN7zLq8C1bqYcOqA+0xW9o1n+7Cw+JqR5iYF5Dkq1sV4gqz9E7y4qE3bY1x2qzHn3Qp7mQxkYx9LxwCz3vA5FZJ7sE9s7TzVh8p1lA0M6wqV8m1p3uQWkqkQe7JYxHjQ1vGdY9a9xwY9mQY7Y0mJxC2oVYwqF6oQO0g+o2b2f3q7Wm2q8lZ5j+KpR3iZl0i8V7c8nq1nYb0a+2tY4p0nY1n9mV1X3yGz1T+eXQX+U9iA1mWvQkHkqj0kQn0m8t8fZqvGv9S8q7w3yX8p9P3bYk2v3Z7X8tQ2e2H3mQ5o2b5k2y9c2FqV3qfQx3zqQm8u3vQpZg9rG8o8Zb0qfQp2s5Y1o+f5WzZ3aF1n8p3f0b0vJfW8+o6Yp9qfY8Kc8mY0lY8pQ5o2b5i2y9c2FqV3qfQx3zqQm8u3vQpZg9rG8o8Zb0qfQp2s5Y1o+f5WzZ3aF1n8p3f0b0vJfW8+o6Yp9qfY8Kc8mY0lY8pQ5o2b5i2y9c2FqV3qfQx3zqQm8u3vQpZg9rG8o8Zb0qfQp2s5Y1o+f5WzZ3aF1n8p3f0b0vJfW8+o6Yp9qfY8Kc8mY0lY8pQ5o2b5i2y9c2FqV3qfQx3zqQm8u3vQpZg9rG8o8Zb0qfQp2s5Y1o+f5WzZ3aF1n8p3f0b0vJfW8+o6Yp9qfY8Kc8mY0lY8pQ5o2b5i2y9c2FqV3qfQx3zqQm8u3vQpZg9rG8o8Zb0qfQp2s5Y1o+f5WzZ3aF1n8p3f0b0vJfW8+o6Yp9qfY8Kc8mY0lY8pQ5o2b5i2y9c2FqV3qfQx3zqQm8u3vQpZg9rG8o8Zb0qfQp2s5Y1o+f5WzZ3aF1n8p3f0b0vJfW8+o6Yp9qfY8Kc8mY0lY8pOrxRvjNvfZiSZvG/t8wmwaDFxK6T2yhuYjqqJqAdXM4Oxvj6aU+aK/5gLYjpugdgWujcAkwG+QAAAA=" />
+
+            <div class="kicker">
+              <span class="pill"><span class="dot"></span> Buscando prácticas / junior</span>
+              <span class="pill">UOC · Ingeniería Informática</span>
+              <span class="pill">Perfil técnico + aprendizaje continuo</span>
+            </div>
+
+            <h1>Reynaldo Galvizu Sánchez</h1>
+
+            <p class="lead">
+              <!-- EDITA: resumen corto (muy importante para RRHH/ATS) -->
+              Estudiante de <b>Ingeniería Informática (UOC)</b> con experiencia técnica en entornos exigentes.
+              Busco <b>prácticas</b> o una posición <b>junior</b> en tecnología (desarrollo, sistemas o QA), aportando
+              disciplina, foco en calidad y capacidad de resolución.
+            </p>
+
+            <div class="hero-actions">
+              <!-- EDITA: enlaces -->
+              <a class="btn primary" href="#contacto">Contactar</a>
+              <a class="btn" href="mailto:reynaldo.gs@hotmail.com?subject=Pr%C3%A1cticas%20/%20Junior%20-%20Reynaldo%20Galvizu">Email directo</a>
+              <a class="btn" href="https://linkedin.com/in/reynaldogs" target="_blank" rel="noreferrer">LinkedIn</a>
+              <!-- EDITA: tu GitHub real -->
+              <a class="btn" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+
+            <div class="down" aria-hidden="true">
+              <a href="#perfil" title="Bajar">↓</a>
+            </div>
+          </div>
+
+          <aside class="hero-card" aria-label="Datos rápidos">
+            <h3>Datos rápidos</h3>
+            <div class="facts">
+              <div class="item">
+                <div class="icon">☎</div>
+                <div>
+                  <b>Teléfono</b><br>
+                  <!-- EDITA: tu teléfono -->
+                  <a href="tel:+34636810146">+34 636 810 146</a>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="icon">✉</div>
+                <div>
+                  <b>Email</b><br>
+                  <a href="mailto:reynaldo.gs@hotmail.com">reynaldo.gs@hotmail.com</a>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="icon">🎓</div>
+                <div>
+                  <b>Objetivo</b><br>
+                  <span class="muted">Prácticas / junior en IT</span>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="icon">🚗</div>
+                <div>
+                  <b>Disponibilidad</b><br>
+                  <span class="muted">Jornada completa · Incorporación inmediata</span>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="icon">🪪</div>
+                <div>
+                  <b>Permiso</b><br>
+                  <span class="muted">B · Vehículo propio</span>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="icon">📅</div>
+                <div>
+                  <b>Nacimiento</b><br>
+                  <!-- EDITA: si no quieres mostrarlo, elimina esta tarjeta -->
+                  <span class="muted">12/03/1992</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hr"></div>
+
+            <p class="muted" style="margin:0">
+              <!-- EDITA: frase final -->
+              Portfolio en construcción: priorizo proyectos con README, commits claros y entregables.
+            </p>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+       PERFIL
+    ========================================================== -->
+    <section id="perfil">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Perfil</h2>
+            <p>Resumen profesional claro para RRHH + enfoque UOC.</p>
+          </div>
+          <div class="label">01 · PERFIL</div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Sobre mí</h3>
+            <p>
+              <!-- EDITA -->
+              Vengo de un entorno técnico donde la seguridad, la precisión y la atención al detalle son clave.
+              Esa mentalidad la aplico ahora a la informática: analizar, priorizar, documentar y mejorar.
+            </p>
+            <div class="tags">
+              <span class="tag a">metódico</span>
+              <span class="tag b">orientado a calidad</span>
+              <span class="tag c">aprendizaje continuo</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Lo que busco</h3>
+            <p>
+              <!-- EDITA -->
+              Prácticas o puesto junior en tecnología donde pueda aportar mi disciplina técnica y crecer
+              en desarrollo/sistemas/QA durante el Grado de Ingeniería Informática (UOC).
+            </p>
+            <ul>
+              <li>Entorno con buenas prácticas: Git, documentación, revisión y mejora.</li>
+              <li>Proyectos con impacto real y feedback.</li>
+              <li>Aprender rápido + aportar estabilidad y responsabilidad.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+       UOC / ENFOQUE
+    ========================================================== -->
+    <section id="uoc">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Enfoque UOC</h2>
+            <p>Orientación a ingeniería: fundamentos, claridad técnica y evidencia en GitHub.</p>
+          </div>
+          <div class="label">02 · UOC</div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Cómo traslado mi experiencia a IT</h3>
+            <ul>
+              <li><b>Resolución de incidencias</b> → debugging, análisis de logs, causa raíz.</li>
+              <li><b>Protocolos y seguridad</b> → calidad, tests, validación, control de cambios.</li>
+              <li><b>Documentación</b> → README, issues, trazabilidad y comunicación.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag ok">problem solving</span>
+              <span class="tag a">documentación</span>
+              <span class="tag b">mejora continua</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Stack objetivo (EDITA)</h3>
+            <p>
+              Recomendación de ruta para portfolio (ajusta a tu rol objetivo).
+            </p>
+            <div class="tags">
+              <span class="tag a">Git / GitHub</span>
+              <span class="tag c">Algoritmos</span>
+              <span class="tag c">Estructuras de datos</span>
+              <span class="tag b">POO</span>
+              <span class="tag ok">SQL / BBDD</span>
+              <span class="tag">Linux (EDITA)</span>
+              <span class="tag">Testing (EDITA)</span>
+              <span class="tag">APIs (EDITA)</span>
+            </div>
+            <p class="muted" style="margin:12px 0 0">
+              Consejo: deja solo lo que puedas defender con ejemplos y repositorios.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+       SKILLS
+    ========================================================== -->
+    <section id="skills">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Skills</h2>
+            <p>Competencias actuales (EDITA niveles cuando evoluciones).</p>
+          </div>
+          <div class="label">03 · SKILLS</div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Competencias técnicas (actual)</h3>
+
+            <!-- EDITA: ajusta porcentajes con --w -->
+            <div class="skill">
+              <div class="row"><b>Resolución de incidencias</b><span class="muted">Alto</span></div>
+              <div class="bar"><span style="--w:88%"></span></div>
+            </div>
+
+            <div class="skill" style="margin-top:12px">
+              <div class="row"><b>Mantenimiento y reparación</b><span class="muted">Alto</span></div>
+              <div class="bar"><span style="--w:90%"></span></div>
+            </div>
+
+            <div class="skill" style="margin-top:12px">
+              <div class="row"><b>Seguridad &amp; prevención</b><span class="muted">Alto</span></div>
+              <div class="bar"><span style="--w:85%"></span></div>
+            </div>
+
+            <div class="skill" style="margin-top:12px">
+              <div class="row"><b>Microsoft Office</b><span class="muted">Medio/Alto</span></div>
+              <div class="bar"><span style="--w:80%"></span></div>
+            </div>
+
+            <div class="skill" style="margin-top:12px">
+              <div class="row"><b>AutoCAD</b><span class="muted">Medio</span></div>
+              <div class="bar"><span style="--w:70%"></span></div>
+            </div>
+
+            <div class="skill" style="margin-top:12px">
+              <div class="row"><b>Programación (UOC)</b><span class="muted">En progreso</span></div>
+              <div class="bar"><span style="--w:55%"></span></div>
+            </div>
+
+          </article>
+
+          <article class="card">
+            <h3>Idiomas &amp; disponibilidad</h3>
+            <ul>
+              <li><b>Castellano</b></li>
+              <li><b>Catalán</b></li>
+              <li><b>Inglés</b> <span class="muted">· (EDITA: nivel exacto, p.ej. B1/B2)</span></li>
+            </ul>
+
+            <div class="hr"></div>
+
+            <ul>
+              <li><b>Disponibilidad horaria:</b> Jornada completa</li>
+              <li><b>Incorporación:</b> Inmediata</li>
+              <li><b>Permiso:</b> B · Vehículo propio</li>
+            </ul>
+
+            <div class="tags">
+              <span class="tag ok">responsabilidad</span>
+              <span class="tag a">comunicación</span>
+              <span class="tag b">equipo</span>
+            </div>
+
+            <p class="muted" style="margin:12px 0 0">
+              <!-- EDITA -->
+              Si quieres enfocarlo a un rol concreto (backend/QA/sistemas), ajusta tags y proyectos.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+       FORMACIÓN (tabs CSS)
+    ========================================================== -->
+    <section id="formacion">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Formación</h2>
+            <p>Académica y complementaria (ACTIC incluido).</p>
+          </div>
+          <div class="label">04 · FORMACIÓN</div>
+        </div>
+
+        <!-- Radios ocultos para tabs -->
+        <div class="tabs">
+          <!-- EDITA: tab por defecto -->
+          <input type="radio" name="tabs" id="tab-uoc" checked>
+          <input type="radio" name="tabs" id="tab-actic">
+          <input type="radio" name="tabs" id="tab-imaq">
+          <input type="radio" name="tabs" id="tab-urv">
+          <input type="radio" name="tabs" id="tab-extra">
+
+          <div class="tab-ui">
+            <div class="tab-list" aria-label="Pestañas de formación">
+              <label for="tab-uoc">UOC · Ingeniería Informática</label>
+              <label for="tab-actic">ACTIC · UOC (2024)</label>
+              <label for="tab-imaq">IMAQ0110 (2020)</label>
+              <label for="tab-urv">Ingeniería Eléctrica (URV)</label>
+              <label for="tab-extra">Complementaria</label>
+            </div>
+
+            <div class="panels">
+              <div class="panel" id="panel-uoc">
+                <h3>Grado en Ingeniería Informática</h3>
+                <div class="meta">Universitat Oberta de Catalunya (UOC) · 2023–Actualidad</div>
+                <p>
+                  <!-- EDITA -->
+                  En curso. Orientación a fundamentos de ingeniería, metodología y práctica en proyectos.
+                  (Puedes añadir asignaturas destacadas y enlaces a trabajos).
+                </p>
+                <div class="tags">
+                  <span class="tag c">ingeniería</span>
+                  <span class="tag a">metodología</span>
+                  <span class="tag ok">proyectos</span>
+                </div>
+              </div>
+
+              <div class="panel" id="panel-actic">
+                <h3>ACREDITACIÓN DE COMPETENCIAS EN TECNOLOGÍAS DE LA INFORMACIÓN Y LA COMUNICACIÓN (ACTIC)</h3>
+                <div class="meta">Nivel medio · expedido por la UOC · 2024</div>
+                <p>Acreditación oficial de competencias TIC.</p>
+                <div class="tags">
+                  <span class="tag ok">competencias TIC</span>
+                  <span class="tag a">productividad</span>
+                </div>
+              </div>
+
+              <div class="panel" id="panel-imaq">
+                <h3>IMAQ0110 · Certificado de profesionalidad</h3>
+                <div class="meta">Instalación y mantenimiento de ascensores y equipos de elevación · 2020</div>
+                <p>Formación técnica especializada en elevación y mantenimiento.</p>
+                <div class="tags">
+                  <span class="tag c">técnico</span>
+                  <span class="tag b">mantenimiento</span>
+                </div>
+              </div>
+
+              <div class="panel" id="panel-urv">
+                <h3>Grado en Ingeniería Eléctrica (4º curso)</h3>
+                <div class="meta">Universitat Rovira i Virgili (URV) · 2015–2019</div>
+                <p>Base de ingeniería y pensamiento analítico.</p>
+                <div class="tags">
+                  <span class="tag c">ingeniería</span>
+                  <span class="tag a">análisis</span>
+                </div>
+              </div>
+
+              <div class="panel" id="panel-extra">
+                <h3>Formación complementaria</h3>
+                <div class="meta">Cursos y acreditaciones</div>
+                <ul>
+                  <li><b>AEQT / AEST (16h)</b> · SP Activa · Enero 2019</li>
+                  <li><b>Rayos X – Escáner (10h)</b> · Sias Formación · Septiembre 2016</li>
+                  <li><b>Habilitación Vigilante de Seguridad</b> · Conv. · Febrero 2016</li>
+                  <li><b>Socorrismo en piscinas e instalaciones acuáticas (100h)</b> · Aunar · Mayo 2013</li>
+                </ul>
+                <div class="hr"></div>
+                <ul>
+                  <li><b>Bachillerato tecnológico</b> · IES Ramón Barbat · 2008–2010</li>
+                  <li><b>ESO</b> · IES Ramón Barbat · 2004–2008</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="muted" style="margin-top:14px">
+          <!-- EDITA -->
+          Tip: añade links a entregables UOC (PDF/README/repos) para reforzar evidencia.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+       EXPERIENCIA (reducida)
+    ========================================================== -->
+    <section id="experiencia">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Experiencia</h2>
+            <p>Resumen cronológico (sin protagonismo, enfoque a transición IT).</p>
+          </div>
+          <div class="label">05 · EXPERIENCIA</div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Cronología</h3>
+            <div class="timeline">
+              <div class="t-item">
+                <div class="t-row">
+                  <div class="t-role">Técnico de mantenimiento de ascensores</div>
+                  <div class="t-when">Ene 2022 – Mar 2025</div>
+                </div>
+                <div class="t-org">Orona S.COOP</div>
+                <p class="t-desc">Mantenimiento preventivo/correctivo y atención a incidencias.</p>
+              </div>
+
+              <div class="t-item">
+                <div class="t-row">
+                  <div class="t-role">Técnico de mantenimiento de ascensores</div>
+                  <div class="t-when">Sep 2020 – Dic 2021</div>
+                </div>
+                <div class="t-org">Ascensores Eninter, S.L.</div>
+                <p class="t-desc">Mantenimiento y reparación en equipos de elevación.</p>
+              </div>
+
+              <div class="t-item">
+                <div class="t-row">
+                  <div class="t-role">Vigilante de seguridad</div>
+                  <div class="t-when">2019 – 2021</div>
+                </div>
+                <div class="t-org">Prosegur · Phoenix Vigilancia y Seguridad</div>
+                <p class="t-desc">Responsabilidad, prevención y gestión de situaciones críticas.</p>
+              </div>
+
+              <div class="t-item">
+                <div class="t-row">
+                  <div class="t-role">Jefe de obra</div>
+                  <div class="t-when">Ene 2019 – Abr 2019</div>
+                </div>
+                <div class="t-org">Lagupres, S.L.</div>
+                <p class="t-desc">Coordinación y seguimiento operativo.</p>
+              </div>
+
+              <div class="t-item">
+                <div class="t-row">
+                  <div class="t-role">Ingeniero eléctrico</div>
+                  <div class="t-when">Oct 2018 – Dic 2018</div>
+                </div>
+                <div class="t-org">SyG, S.A.</div>
+                <p class="t-desc">Experiencia temporal en entorno de ingeniería.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Enfoque de transición a IT</h3>
+            <p>
+              <!-- EDITA -->
+              Actualmente priorizo construir evidencia técnica (proyectos UOC + GitHub). Mi objetivo es iniciar
+              carrera profesional en tecnología en un entorno con buenas prácticas.
+            </p>
+            <ul>
+              <li>Proyectos con README, commits claros y objetivos definidos.</li>
+              <li>Documentación y trazabilidad (issues, checklist, entregables).</li>
+              <li>Aprender rápido y aportar estabilidad, responsabilidad y calidad.</li>
+            </ul>
+            <div class="tags">
+              <span class="tag ok">prácticas</span>
+              <span class="tag a">junior</span>
+              <span class="tag b">portfolio</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+       PROYECTOS (placeholders profesionales)
+    ========================================================== -->
+    <section id="proyectos">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Proyectos</h2>
+            <p>Sección clave para Ingeniería Informática (UOC). Sustituye “EDITA” con tus repos reales.</p>
+          </div>
+          <div class="label">06 · PROYECTOS</div>
+        </div>
+
+        <div class="projects">
+          <article class="project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div class="body">
+              <h3>Proyecto UOC · (EDITA nombre)</h3>
+              <p class="muted">Problema → solución → resultados → stack (README).</p>
+              <div class="tags">
+                <span class="tag a">Git</span>
+                <span class="tag c">UOC</span>
+                <span class="tag">HTML/CSS (EDITA)</span>
+              </div>
+              <div class="links">
+                <a class="link" href="https://github.com/" target="_blank" rel="noreferrer">Repo</a>
+                <a class="link" href="#" title="EDITA: demo si tienes">Demo</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div class="body">
+              <h3>Proyecto · (EDITA sistemas / scripts)</h3>
+              <p class="muted">Automatización / práctica de sistemas (logs, Bash, Linux…).</p>
+              <div class="tags">
+                <span class="tag ok">Linux (EDITA)</span>
+                <span class="tag a">Documentación</span>
+                <span class="tag">Testing (EDITA)</span>
+              </div>
+              <div class="links">
+                <a class="link" href="https://github.com/" target="_blank" rel="noreferrer">Repo</a>
+                <a class="link" href="#" title="EDITA: documentación">Docs</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <div class="thumb" aria-hidden="true"></div>
+            <div class="body">
+              <h3>Proyecto · (EDITA data / SQL)</h3>
+              <p class="muted">Modelo de datos / consultas / caso de estudio con resultados.</p>
+              <div class="tags">
+                <span class="tag c">SQL (EDITA)</span>
+                <span class="tag b">POO (EDITA)</span>
+                <span class="tag a">Calidad</span>
+              </div>
+              <div class="links">
+                <a class="link" href="https://github.com/" target="_blank" rel="noreferrer">Repo</a>
+                <a class="link" href="#" title="EDITA: informe">Informe</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="muted" style="margin-top:16px">
+          Tip: 2–3 proyectos muy bien explicados suelen ganar a 10 sin detalle. Añade capturas y decisiones técnicas.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+       CONTACTO
+    ========================================================== -->
+    <section id="contacto">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Contacto</h2>
+            <p>Si buscas un perfil junior/prácticas con mentalidad técnica, hablamos.</p>
+          </div>
+          <div class="label">07 · CONTACTO</div>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <h3>Datos</h3>
+            <ul>
+              <li><b>Tel:</b> <a href="tel:+34636810146">+34 636 810 146</a></li>
+              <li><b>Email:</b> <a href="mailto:reynaldo.gs@hotmail.com">reynaldo.gs@hotmail.com</a></li>
+              <li><b>LinkedIn:</b> <a href="https://linkedin.com/in/reynaldogs" target="_blank" rel="noreferrer">linkedin.com/in/reynaldogs</a></li>
+              <li><b>GitHub:</b> <a href="https://github.com/" target="_blank" rel="noreferrer">github.com/EDITA</a></li>
+            </ul>
+
+            <div class="hr"></div>
+
+            <div class="hero-actions">
+              <a class="btn primary" href="mailto:reynaldo.gs@hotmail.com?subject=Pr%C3%A1cticas%20/%20Junior%20-%20Reynaldo%20Galvizu">Enviar email</a>
+              <a class="btn" href="Reynaldo_Galvizu_CV.pdf" download>Descargar PDF</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Checklist final (para RRHH + Tech)</h3>
+            <ul>
+              <li>Sube un PDF a tu repo con el nombre: <b>Reynaldo_Galvizu_CV.pdf</b> (para el botón).</li>
+              <li>Completa “Proyectos” con 2–3 repos reales (README + capturas + objetivos).</li>
+              <li>En Skills, deja solo lo que puedas defender en entrevista.</li>
+              <li>Exporta a PDF con <b>Ctrl/Cmd + P</b> (esta web ya tiene estilo de impresión).</li>
+            </ul>
+            <p class="muted" style="margin:10px
