@@ -359,6 +359,17 @@
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.10);
     }
+    .facts a.item{
+      cursor: pointer;
+      transition: background .18s ease, border-color .18s ease, transform .18s ease;
+    }
+    .facts a.item:hover,
+    .facts a.item:focus-visible{
+      background: rgba(255,255,255,.08);
+      border-color: rgba(0,209,255,.35);
+      transform: translateY(-1px);
+      outline: none;
+    }
     .icon{
       width: 26px;
       height: 26px;
@@ -834,22 +845,21 @@
           <aside class="hero-card" aria-label="Datos rápidos">
             <h3>Datos rápidos</h3>
             <div class="facts">
-              <div class="item">
+              <a class="item" href="tel:+34636810146" aria-label="Llamar al teléfono +34 636 810 146">
                 <div class="icon">☎</div>
                 <div>
                   <b>Teléfono</b><br>
-                  <!-- EDITA: tu teléfono -->
-                  <a href="tel:+34636810146">+34 636 810 146</a>
+                  <span>+34 636 810 146</span>
                 </div>
-              </div>
+              </a>
 
-              <div class="item">
+              <a class="item" href="mailto:reynaldo.gs@hotmail.com?subject=Contacto%20-%20CV%20Reynaldo%20Galvizu" aria-label="Enviar email a reynaldo.gs@hotmail.com">
                 <div class="icon">✉</div>
                 <div>
                   <b>Email</b><br>
-                  <a href="mailto:reynaldo.gs@hotmail.com">reynaldo.gs@hotmail.com</a>
+                  <span>reynaldo.gs@hotmail.com</span>
                 </div>
-              </div>
+              </a>
 
               <div class="item">
                 <div class="icon">🎓</div>
