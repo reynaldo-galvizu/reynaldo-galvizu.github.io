@@ -55,4 +55,4 @@ Es un flujo de impresión manual desde una fuente única, no un archivo PDF rege
 
 ## Revisión de contenido pendiente
 Confirmar niveles de castellano/catalán y disponibilidad; concretar herramientas de IA y usos reales cuando se conozcan. No se han inventado nombres de herramientas ni resultados.
-Destino de publicación elegido: reynaldo-galvizu/reynaldo-galvizu.github.io. Los enlaces a proyectos de reynaldo1992 se conservan porque allí están los repositorios verificados.
+Destino de publicación elegido: reynaldo-galvizu/reynaldo-galvizu.github.io. El portfolio y rg-toolkit están alojados en reynaldo-galvizu; todos los enlaces públicos apuntan a esa cuenta.
