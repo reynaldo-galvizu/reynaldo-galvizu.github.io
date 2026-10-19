@@ -12,6 +12,9 @@ La experiencia técnica es el punto de partida; informática e IA representan la
 - skills-orbit.css / skills-orbit.js: segundo sistema 3D para las seis habilidades; carga diferida al acercarse a la sección.
 - cosmic-background.css / cosmic-background.js: cielo estelar, nebulosidad diagonal, destellos suaves y estrellas fugaces.
 - cosmic-ui.css / cosmic-ui.js: selectores planetarios, colores al pasar el cursor y latido continuo de Ahora.
+- pulse-effects.css: latido suave compartido por los indicadores de estado y la mascota.
+- connection-globe.css / connection-globe.js: Tierra punteada con conexiones ilustrativas.
+- companion.css / companion.js: mascota Órbita y conversación gratuita basada en los contenidos del CV.
 - assets/favicon.svg, favicon-32.png y favicon-180.png: emblema RG para pestañas y accesos directos. logo-mark.svg se usa en la web.
 - assets/vendor/: GSAP 3.13.0, ScrollTrigger y Three.js 0.180.0. Se conservan las cabeceras de licencia y THREE-LICENSE.txt.
 - assets/foto-cv.png: foto solo en cabecera; zoom discreto al pasar el cursor.
@@ -67,6 +70,17 @@ Una primera estrella fugaz aparece tras unos seis segundos activos; las siguient
 El punto de Ahora tiene un latido doble continuo, independiente de las animaciones GSAP de entrada. Solo se suspende cuando no se ve, la pestaña está oculta o el visitante pide reducir movimiento.
 Los botones de selección son planetas con anillos y respuestas de luz; el acento cambia con la selección.
 El sistema de habilidades conserva los seis botones HTML y los textos originales como fuente. WebGL se carga al acercarse a la sección; sin soporte se mantiene la galaxia y sus controles en HTML/CSS. Esferas, materiales, satélites, anillos y lunas son gráficos generados en código.
+
+## Órbita: guía gratuita del CV
+La mascota abre una conversación solo al pulsarla. Reconoce preguntas sencillas sobre conocimientos, proyectos, formación, certificados, experiencia, disponibilidad y redes de contacto. Lee los contenidos semánticos publicados; una pregunta sin datos suficientes remite al contacto, sin inventar.
+Funciona en el navegador, sin API, modelo de pago, registro, cookies ni almacenamiento persistente. El historial vive exclusivamente en esta pestaña. Los mensajes se insertan como texto, y los enlaces se restringen a destinos reales del CV. No prepara ni envía mensajes a terceros.
+Escape cierra el panel; se restaura el foco. En móvil se oculta cuando el menú principal está abierto. En impresión se excluye.
+No se presenta como IA generativa: es una guía por temas con enlaces y respuestas extraídas del portfolio.
+
+## Globo de conexiones
+El globo usa una distribución uniforme de puntos sobre los continentes, atmósfera, arcos y pulsos luminosos. Sus conexiones son una ilustración, no métricas de visitas ni ubicaciones personales.
+Geografía: [Natural Earth, dominio público](https://www.naturalearthdata.com/about/terms-of-use/), incluida localmente como assets/world-land.geojson. No se reutilizan activos ni marcas de Cloudflare.
+Incluye arrastre, teclado, pausa, carga al acercarse a la sección y alternativas estáticas cuando WebGL no está disponible. Respeta movimiento reducido y deja de renderizar fuera de pantalla.
 
 ## Contacto
 El formulario valida los campos y prepara un enlace mailto. NO envía mensajes por sí solo, no guarda datos y no comunica éxito de envío. Requiere una aplicación de correo configurada. El email y LinkedIn son alternativas permanentes.

@@ -1,0 +1,45 @@
+/* Small status beacons share one restrained, continuous double heartbeat. */
+.status-dot,
+.skills-orbit-signal::before,
+.skills-orbit-meta i,
+.connection-status-dot,
+.companion-status-dot {
+  --beacon-color:var(--mint,#bce9cd);
+  transform-origin:center;
+  animation:beacon-heartbeat 2.8s ease-in-out infinite;
+  will-change:opacity,transform;
+}
+.skills-orbit-signal::before { --beacon-color:var(--skill-color,#bce9cd) }
+.timeline-item:first-child::before{
+  --beacon-color:#ffac93;
+  animation:beacon-heartbeat 2.8s ease-in-out infinite;
+}
+.timeline-item:first-child::after{
+  animation:beacon-ring 2.8s ease-out infinite;
+}
+@keyframes beacon-heartbeat{
+  0%,11%,42%,100%{opacity:.64;transform:scale(.98);box-shadow:0 0 0 3px color-mix(in srgb,var(--beacon-color) 7%,transparent)}
+  20%{opacity:.98;transform:scale(1.14);box-shadow:0 0 9px color-mix(in srgb,var(--beacon-color) 32%,transparent)}
+  28%{opacity:.7;transform:scale(1)}
+  35%{opacity:.94;transform:scale(1.09);box-shadow:0 0 7px color-mix(in srgb,var(--beacon-color) 25%,transparent)}
+}
+@keyframes beacon-ring{
+  0%,16%{opacity:.24;transform:scale(1)}
+  63%,100%{opacity:0;transform:scale(2.4)}
+}
+.orbit-art.solar-system{border-top:0;border-bottom:0}
+.cosmic-page-hidden .status-dot,
+.cosmic-page-hidden .skills-orbit-signal::before,
+.cosmic-page-hidden .skills-orbit-meta i,
+.cosmic-page-hidden .connection-status-dot,
+.cosmic-page-hidden .companion-status-dot{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){
+  .status-dot,.skills-orbit-signal::before,.skills-orbit-meta i,.connection-status-dot,.companion-status-dot,.timeline-item:first-child::before{animation:none!important;opacity:.85;transform:none;box-shadow:0 0 0 3px #bce9cd10}
+  .timeline-item:first-child::after{display:none}
+}
+@media print{
+  .status-dot,.skills-orbit-signal::before,.skills-orbit-meta i,.connection-status-dot,.companion-status-dot{display:none!important}
+  .timeline-item:first-child::before{animation:none;box-shadow:none}
+}
+.companion-beacon{--beacon-color:#ffae8e;transform-box:fill-box;transform-origin:center;animation:beacon-heartbeat 2.8s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.companion-beacon{animation:none!important;transform:none;opacity:.85}}
