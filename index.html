@@ -7,15 +7,19 @@
   <meta name="theme-color" content="#10151c">
   <title>Reynaldo Galvizu · Una nueva órbita</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="brand-effects.css">
+  <link rel="stylesheet" href="solar-system.css">
   <script defer src="assets/vendor/gsap.min.js"></script>
   <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
   <script defer src="script.js"></script>
+  <script defer src="brand-effects.js"></script>
+  <script defer src="solar-system.js"></script>
 </head>
 <body>
 <a class="skip" href="#contenido">Saltar al contenido</a>
 <div class="reading-progress" aria-hidden="true"></div>
 <header class="header">
-  <a class="brand" href="#inicio" aria-label="Reynaldo Galvizu, inicio"><img src="assets/foto-cv.png" width="38" height="38" alt=""><span>Reynaldo Galvizu<span class="brand-dot">.</span></span></a>
+  <a class="brand" href="#inicio" aria-label="Reynaldo Galvizu, inicio"><span class="brand-portrait"><img src="assets/foto-cv.png" width="38" height="38" alt=""></span><span class="brand-name" data-brand-name="Reynaldo Galvizu" aria-hidden="true">Reynaldo Galvizu<span class="brand-dot">.</span></span></a>
   <button class="menu-toggle" aria-expanded="false" aria-controls="navigation" hidden>Menú <span aria-hidden="true">+</span></button>
   <nav id="navigation" aria-label="Navegación principal">
     <a href="#trayectoria">Trayectoria</a><a href="#skills">Habilidades</a><a href="#proyectos">Proyectos</a><a class="nav-contact" href="#contacto">Hablemos <span aria-hidden="true">↗</span></a>
@@ -31,12 +35,34 @@
     <a class="button primary" href="https://github.com/reynaldo-galvizu?tab=repositories" target="_blank" rel="noopener noreferrer">Mis proyectos en GitHub <span aria-hidden="true">↗</span></a>
     <div class="hero-foot"><span>Ingeniería Informática · UOC</span><span>Aprender. Aplicar. Evolucionar.</span></div>
   </div>
-  <div class="orbit-art" aria-hidden="true">
-    <div class="orbit-grid"></div>
-    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
-    <div class="planet"><span>RG</span><small>EN EVOLUCIÓN</small></div>
-    <span class="satellite sat-one">Python</span><span class="satellite sat-two">IA</span><span class="satellite sat-three">Java</span>
-    <div class="orbit-caption"><span class="cross">+</span> CURIOSIDAD EN MOVIMIENTO</div>
+  <div class="orbit-art solar-system" role="group" aria-label="Mi sistema solar interactivo">
+    <div class="solar-heading"><span><i aria-hidden="true"></i> MI UNIVERSO EN MOVIMIENTO</span><span class="solar-coordinates" aria-hidden="true">RG / ÓRBITA 01</span></div>
+    <div id="solar-viewport" class="solar-viewport">
+      <div class="solar-fallback" aria-hidden="true">
+        <i class="fallback-orbit orbit-a"></i><i class="fallback-orbit orbit-b"></i><i class="fallback-orbit orbit-c"></i>
+        <span class="fallback-core">RG</span><span class="fallback-world world-a"></span><span class="fallback-world world-b"></span><span class="fallback-world world-c"></span>
+      </div>
+      <div class="solar-labels" aria-hidden="true"></div>
+      <div class="solar-core-label" aria-hidden="true"><strong>RG</strong><span>EN EVOLUCIÓN</span></div>
+      <p class="solar-drag-hint">Arrastra para cambiar de perspectiva</p>
+    </div>
+    <div class="solar-toolbar"><p>Elige un planeta. Descubre una conexión.</p><div>
+      <button id="solar-toggle" class="solar-control" type="button" aria-label="Pausar órbitas" aria-pressed="false" hidden><span class="solar-pause-icon" aria-hidden="true">Ⅱ</span></button>
+      <button id="solar-reset" class="solar-control" type="button" aria-label="Restablecer perspectiva" hidden><span aria-hidden="true">↺</span></button>
+    </div></div>
+    <div class="solar-choices" role="group" aria-label="Seleccionar planeta">
+      <button class="solar-choice is-active" data-body="ai" style="--world-color:#ffbd78" aria-pressed="true" type="button"><i aria-hidden="true"></i>IA</button>
+      <button class="solar-choice" data-body="python" style="--world-color:#bce9cd" aria-pressed="false" type="button"><i aria-hidden="true"></i>Python</button>
+      <button class="solar-choice" data-body="java" style="--world-color:#ff977e" aria-pressed="false" type="button"><i aria-hidden="true"></i>Java</button>
+      <button class="solar-choice" data-body="postgres" style="--world-color:#a8bdff" aria-pressed="false" type="button"><i aria-hidden="true"></i>Datos</button>
+      <button class="solar-choice" data-body="docker" style="--world-color:#76d4ed" aria-pressed="false" type="button"><i aria-hidden="true"></i>Docker</button>
+      <button class="solar-choice" data-body="projects" style="--world-color:#dfc5fa" aria-pressed="false" type="button"><i aria-hidden="true"></i>Proyectos</button>
+    </div>
+    <div class="solar-info">
+      <div aria-live="polite" aria-atomic="true"><span class="solar-info-kicker" id="solar-category">INTELIGENCIA ARTIFICIAL</span><h3 id="solar-title">Herramientas de IA</h3><p id="solar-description">Una de las capacidades que aporto a mi siguiente etapa profesional.</p></div>
+      <a id="solar-open" href="#skills" data-solar-skill="ai" aria-label="Explorar Herramientas de IA">Explorar <span aria-hidden="true">↗</span></a>
+    </div>
+    <p class="sr-only" id="solar-status" role="status"></p>
   </div>
 </section>
 <div class="stack-strip" aria-label="Conocimientos"><span>Python</span><span>Java</span><span>PostgreSQL</span><span>Docker</span><span>Microservicios</span><span>Herramientas de IA</span></div>

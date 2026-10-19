@@ -86,11 +86,10 @@ if(window.gsap && window.ScrollTrigger){
  const media=gsap.matchMedia();
  media.add("(prefers-reduced-motion: no-preference)",()=>{
   gsap.from(".hero-copy > *",{y:24,opacity:0,duration:.75,stagger:.09,ease:"power2.out",clearProps:"transform,opacity"});
-  gsap.from(".orbit-art",{scale:.92,opacity:0,duration:1.2,ease:"power2.out",clearProps:"transform,opacity"});
+  gsap.from(".solar-heading, .solar-toolbar, .solar-choices, .solar-info",{y:12,opacity:0,duration:.7,stagger:.08,ease:"power2.out",clearProps:"transform,opacity"});
   gsap.utils.toArray(".reveal").forEach(el=>{
    gsap.from(el,{y:28,opacity:0,duration:.7,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 92%",once:true},clearProps:"transform,opacity"});
   });
-  gsap.to(".orbit-art",{y:45,rotation:6,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:1}});
   gsap.to(".reading-progress",{scaleX:1,ease:"none",scrollTrigger:{trigger:document.documentElement,start:0,end:"max",scrub:true}});
  });
 }

@@ -7,11 +7,13 @@ La experiencia técnica es el punto de partida; informática e IA representan la
 - index.html: todo el contenido, trayectoria, proyectos, formación y contacto.
 - styles.css: diseño, responsive, estados interactivos e impresión.
 - script.js: habilidades, filtros, menú, formulario y GSAP.
-- assets/vendor/: GSAP 3.13.0 y ScrollTrigger, con sus cabeceras de licencia originales.
+- brand-effects.css / brand-effects.js: recorte y marco del retrato, zoom y resolución breve de letras.
+- solar-system.css / solar-system.js: observatorio 3D, controles, órbitas y conexión con contenidos.
+- assets/vendor/: GSAP 3.13.0, ScrollTrigger y Three.js 0.180.0. Se conservan las cabeceras de licencia y THREE-LICENSE.txt.
 - assets/foto-cv.png: foto solo en cabecera; zoom discreto al pasar el cursor.
 - assets/certificado-ingles-b2-uoc.pdf: certificado existente.
 
-Abrir index.html o servir esta carpeta mediante un servidor estático. No requiere compilación, npm ni servidor de formularios. Compatible con GitHub Pages. Sitio de publicación: https://reynaldo-galvizu.github.io · Repositorio: https://github.com/reynaldo-galvizu/reynaldo-galvizu.github.io
+Servir esta carpeta mediante un servidor estático para activar la escena 3D. Al abrir index.html directamente con file://, el navegador restringe los módulos y se muestra la vista simplificada. No requiere compilación, npm ni servidor de formularios. Compatible con GitHub Pages. Sitio de publicación: https://reynaldo-galvizu.github.io · Repositorio: https://github.com/reynaldo-galvizu/reynaldo-galvizu.github.io
 
 ## Sistema visual
 | Token | Color | Uso |
@@ -37,6 +39,22 @@ Las ilustraciones de proyectos son gráficos CSS del portfolio y toolkit; no pre
 Las animaciones usan GSAP + ScrollTrigger local: https://gsap.com/docs/v3/Plugins/ScrollTrigger/
 El contenido permanece visible si GSAP no carga. prefers-reduced-motion desactiva animaciones y zoom. No se altera el desplazamiento nativo.
 La galería y la galaxia admiten teclado; los cambios tienen estados accesibles y anuncios. El menú móvil cierra con Escape.
+
+## Interacciones de identidad y sistema solar
+El marco circular de la foto tiene un borde blanco de 2 px; el recorte se ajusta mediante CSS y no altera el archivo original. El nombre conserva su texto accesible mientras una capa visual resuelve caracteres durante unos 650 ms. La secuencia se cancela al retirar el cursor o perder el foco.
+
+Three.js renderiza esferas iluminadas, el núcleo RG, anillos y un cinturón de asteroides. Las órbitas son elipses coplanares calculadas con la ecuación de Kepler y velocidades relativas proporcionales a a^(-3/2). Es una representación idealizada de gravedad central, no una simulación N-body ni un sistema solar a escala.
+
+- Arrastrar la escena cambia la perspectiva con amortiguación.
+- Flechas del teclado al enfocar la escena cambian el ángulo; Home restablece la vista y Espacio pausa/reanuda.
+- Los seis botones y la selección directa de esferas muestran contextos reales de habilidades/proyectos.
+- Explorar navega a la habilidad correspondiente o a los proyectos.
+- Pausa y reinicio permiten observar la escena con calma.
+- Se detiene al salir de pantalla o esconder la pestaña. Movimiento reducido ofrece una vista estática con selección funcional.
+- Si WebGL falla, se conserva una ilustración CSS y todos los accesos al contenido.
+
+Las órbitas y sus etiquetas se proyectan desde las mismas coordenadas 3D. La escala de planetas es visual, no un indicador del nivel de dominio de una habilidad.
+Three.js: https://threejs.org/docs/
 
 ## Contacto
 El formulario valida los campos y prepara un enlace mailto. NO envía mensajes por sí solo, no guarda datos y no comunica éxito de envío. Requiere una aplicación de correo configurada. El email y LinkedIn son alternativas permanentes.
