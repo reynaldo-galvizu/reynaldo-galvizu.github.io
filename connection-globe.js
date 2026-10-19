@@ -65,6 +65,14 @@
     }
     const globe = new THREE.Mesh(new THREE.SphereGeometry(RADIUS - .016, 64, 40), new THREE.MeshBasicMaterial({ color: 0x0b1920 }));
     earth.add(globe);
+    // A quiet geodesic network gives the dots a connected, physical surface.
+    // The opaque Earth still hides all lines on the far hemisphere.
+    const networkSurface = new THREE.IcosahedronGeometry(RADIUS + .005, 3);
+    const network = new THREE.LineSegments(new THREE.WireframeGeometry(networkSurface), new THREE.LineBasicMaterial({
+      color: 0x91d4c1, transparent: true, opacity: .075, depthWrite: false
+    }));
+    networkSurface.dispose();
+    earth.add(network);
     // Polygon bounding boxes avoid thousands of unnecessary point-in-ring tests.
     const polygons = [];
     for (const feature of map.features || []) {
@@ -140,7 +148,20 @@
     ].map(([lon, lat]) => position(lon, lat, RADIUS + .025));
     const nodeGeometry = new THREE.SphereGeometry(.028, 10, 8);
     const nodeMaterial = new THREE.MeshBasicMaterial({ color: 0xffb093 });
-    cities.forEach(point => { const node = new THREE.Mesh(nodeGeometry, nodeMaterial); node.position.copy(point); earth.add(node); });
+    const nodeRings = [];
+    const ringGeometry = new THREE.RingGeometry(.045, .055, 24);
+    const axis = new THREE.Vector3(0, 0, 1);
+    cities.forEach((point, index) => {
+      const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+      node.position.copy(point); earth.add(node);
+      const ring = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({
+        color: 0xffb093, transparent: true, opacity: .36, depthWrite: false, side: THREE.DoubleSide
+      }));
+      ring.position.copy(point).setLength(RADIUS + .028);
+      ring.quaternion.setFromUnitVectors(axis, point.clone().normalize());
+      earth.add(ring);
+      nodeRings.push({ mesh: ring, offset: index * .147 });
+    });
     const links = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [0, 6], [0, 7], [0, 4], [6, 1]];
     const pulses = [];
     const pulseGeometry = new THREE.SphereGeometry(.023, 8, 6);
@@ -148,8 +169,8 @@
     links.forEach(([from, to], index) => {
       const a = cities[from].clone().normalize(), b = cities[to].clone().normalize();
       const angle = a.angleTo(b), sinAngle = Math.sin(angle);
-      function arc(t) {
-        const point = a.clone().multiplyScalar(Math.sin((1 - t) * angle) / sinAngle).addScaledVector(b, Math.sin(t * angle) / sinAngle);
+      function arc(t, point = new THREE.Vector3()) {
+        point.copy(a).multiplyScalar(Math.sin((1 - t) * angle) / sinAngle).addScaledVector(b, Math.sin(t * angle) / sinAngle);
         return point.normalize().multiplyScalar(RADIUS + .03 + Math.sin(Math.PI * t) * (.25 + angle * .13));
       }
       const points = Array.from({ length: 73 }, (_, i) => arc(i / 72));
@@ -158,13 +179,28 @@
       const pulse = new THREE.Mesh(pulseGeometry, pulseMaterial);
       const halo = new THREE.Mesh(new THREE.SphereGeometry(.06, 8, 6), new THREE.MeshBasicMaterial({ color: 0xbce9cd, transparent: true, opacity: .13, depthWrite: false }));
       pulse.add(halo); earth.add(pulse);
-      pulses.push({ mesh: pulse, arc, offset: index * .127, speed: .054 + index * .002 });
+      // A tapered trail makes movement readable at a glance, rather than a lone dot.
+      const samples = 22;
+      const trailGeometry = new THREE.BufferGeometry();
+      trailGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(samples * 3), 3).setUsage(THREE.DynamicDrawUsage));
+      trailGeometry.setAttribute("strength", new THREE.Float32BufferAttribute(Array.from({ length: samples }, (_, i) => Math.pow(i / (samples - 1), 1.6)), 1));
+      const trail = new THREE.Line(trailGeometry, new THREE.ShaderMaterial({
+        transparent: true, depthWrite: false,
+        uniforms: { tint: { value: new THREE.Color(index % 3 === 0 ? 0xffb093 : 0xd9ffef) } },
+        vertexShader: "attribute float strength; varying float glow; void main(){glow=strength;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
+        fragmentShader: "uniform vec3 tint; varying float glow; void main(){gl_FragColor=vec4(tint,glow*.95);\n#include <colorspace_fragment>\n}"
+      }));
+      // The changing trail may cross its original bounding sphere as the Earth turns.
+      trail.frustumCulled = false;
+      earth.add(trail);
+      pulses.push({ mesh: pulse, arc, trail, samples, offset: index * .127, speed: .075 + index * .004 });
     });
     let paused = reduced.matches;
     let explicitChoice = false;
     let raf = 0, previous = 0, elapsed = 0, lost = false;
     let drag = null, drift = 0;
     let targetX = .12, targetY = -.42;
+    const trailPoint = new THREE.Vector3();
     function updateToggle() {
       toggle.setAttribute("aria-pressed", String(paused));
       const label = toggle.querySelector(".connection-toggle-label");
@@ -189,16 +225,31 @@
       if (lost || !active || document.hidden) { previous = 0; return; }
       const delta = previous ? Math.min((timestamp - previous) / 1000, .055) : 0;
       previous = timestamp;
-      if (!paused && !drag) {
+      if (!paused) {
         elapsed += delta;
-        targetY += delta * .058;
-        if (!reduced.matches) { targetY += drift; drift *= .94; }
+        if (!drag) {
+          targetY += delta * .075;
+          if (!reduced.matches) { targetY += drift; drift *= .94; }
+        }
       }
       const ease = reduced.matches ? 1 : Math.min(delta * 7 + .035, 1);
       earth.rotation.y += (targetY - earth.rotation.y) * ease;
       earth.rotation.x += (targetX - earth.rotation.x) * ease;
-      pulses.forEach(({ mesh, arc, offset, speed }) => {
-        mesh.position.copy(arc((elapsed * speed + offset) % 1));
+      nodeRings.forEach(({ mesh, offset }) => {
+        const wave = (elapsed * .31 + offset) % 1;
+        mesh.scale.setScalar(1 + wave * 1.25);
+        mesh.material.opacity = .35 * (1 - wave);
+      });
+      pulses.forEach(({ mesh, arc, trail, samples, offset, speed }) => {
+        const phase = (elapsed * speed + offset) % 1;
+        mesh.position.copy(arc(phase, trailPoint));
+        const positions = trail.geometry.attributes.position;
+        for (let i = 0; i < samples; i++) {
+          // Clamp the tail at the source, so a new pulse never draws a chord through Earth.
+          arc(Math.max(0, phase - .13 * (1 - i / (samples - 1))), trailPoint);
+          positions.setXYZ(i, trailPoint.x, trailPoint.y, trailPoint.z);
+        }
+        positions.needsUpdate = true;
       });
       renderer.render(scene, camera);
       const easing = Math.abs(targetY - earth.rotation.y) + Math.abs(targetX - earth.rotation.x) > .0001;

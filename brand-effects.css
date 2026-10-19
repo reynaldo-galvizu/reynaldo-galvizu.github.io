@@ -41,34 +41,24 @@
   align-items: baseline;
   position: relative;
   line-height: 1.2;
-  perspective: 400px;
   white-space: nowrap;
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(.22,.8,.25,1), color 420ms ease,
+    text-shadow 420ms ease;
 }
 
-.brand-letter {
-  display: inline-block;
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-/* The permanent character fixes each letter's width while its glyph resolves. */
-.brand-letter::before {
-  content: attr(data-final);
-  visibility: hidden;
-}
-
-.brand-glyph {
+.brand-name::after {
+  content: '';
   position: absolute;
-  inset: 0;
-  display: block;
-  text-align: center;
-  transform-origin: center 60%;
-  backface-visibility: hidden;
-}
-
-.brand-letter.is-decoding .brand-glyph {
-  color: var(--mint, #bce9cd);
-  text-shadow: 0 0 12px #bce9cd66;
+  left: 0;
+  right: 0;
+  bottom: -.32em;
+  height: 1px;
+  background: linear-gradient(90deg, #bce9cd90, #ff977e65, transparent);
+  opacity: 0;
+  transform: scaleX(.7);
+  transform-origin: left;
+  transition: transform 420ms ease, opacity 420ms ease;
 }
 
 .brand-name .brand-dot {
@@ -80,10 +70,30 @@
   box-shadow: 0 0 0 1px #bce9cd90, 0 6px 22px #0005;
 }
 
+.brand:focus-visible .brand-name {
+  transform: translateX(2px) scale(1.055);
+  color: var(--mint, #bce9cd);
+  text-shadow: 0 0 18px #bce9cd20;
+}
+
+.brand:focus-visible .brand-name::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .brand:hover .brand-portrait {
     transform: translateX(-6px) scale(1.65);
     box-shadow: 0 0 0 1px #bce9cd90, 0 6px 22px #0005;
+  }
+  .brand:hover .brand-name {
+    transform: translateX(2px) scale(1.055);
+    color: var(--mint, #bce9cd);
+    text-shadow: 0 0 18px #bce9cd20;
+  }
+  .brand:hover .brand-name::after {
+    opacity: 1;
+    transform: scaleX(1);
   }
 }
 
@@ -103,5 +113,11 @@
     transform: none;
     transition: none;
   }
-  .brand-glyph { transform: none !important; }
+  .brand-name,
+  .brand:hover .brand-name,
+  .brand:focus-visible .brand-name {
+    transform: none;
+    transition: none;
+  }
+  .brand-name::after { display: none; }
 }

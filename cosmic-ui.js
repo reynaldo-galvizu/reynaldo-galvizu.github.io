@@ -3,15 +3,6 @@
   "use strict";
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-  const accents = {
-    python: "#ffd46d", java: "#ff977e", postgresql: "#a8bdff",
-    docker: "#76d4ed", microservicios: "#dfc5fa", "herramientas de ia": "#bce9cd"
-  };
-  document.querySelectorAll(".stack-strip > span").forEach((label) => {
-    const color = accents[label.textContent.trim().toLowerCase()];
-    if (color) label.style.setProperty("--tech-color", color);
-  });
-
   const updatePageVisibility = () => document.documentElement.classList.toggle("cosmic-page-hidden", document.hidden);
   document.addEventListener("visibilitychange", updatePageVisibility);
   updatePageVisibility();

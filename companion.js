@@ -189,7 +189,9 @@
   }
 
   function localAnswer(question) {
-    const query = normalize(question);
+    // Ignore punctuation and accents without changing the visitor's displayed message.
+    const query = normalize(question).replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+    const ownerName = text($(".hero-name")).replace(/^soy\s+/i, "").replace(/[.!]+$/, "") || "Reynaldo Galvizu Sánchez";
     const allSkills = knowledge();
     const skillMap = {
       python: /\bpython\b|\bpy\b/,
@@ -202,55 +204,95 @@
     const matches = allSkills.filter(skill => skillMap[skill.key]?.test(query));
     const projectCards = Array.from(document.querySelectorAll("#proyectos .project-card"));
     const educationCards = Array.from(document.querySelectorAll("#formacion .education-card"));
+    const contactActions = linksFor("#contacto .email-link, #contacto .contact-socials a[href*='linkedin']");
+    const email = text($("#contacto .email-link")).replace(/\s*↗$/, "");
+    const availability = text($("#contacto .availability"));
+    const degree = educationCards.find(card => /ingenieria informatica/.test(normalize(text($("h3", card)))));
+    const educationText = card => text($("h3", card)) + ": " + text($("p", card));
 
-    if (/quien eres|como funcionas|eres (una? )?(ia|inteligencia|chatbot)|tus datos|privacidad/.test(query)) return {
-      reply: "Soy Órbita, la guía de este portfolio. Te ayudo a encontrar la formación, los conocimientos, los proyectos y las vías de contacto publicados aquí. Mis respuestas se basan en el CV y la conversación permanece en esta pestaña.",
+    // Read the clock when the question is asked; never bake a build date into the CV.
+    const asksAboutPastCV = /certific|estudi|complet|termin|gradu|practic|trabaj|curso|nacim|cumple|emple|ingles|actic/.test(query);
+    const asksTime = !asksAboutPastCV && /\b(que hora|la hora|hora actual|hora es|hora tenemos|fecha y hora)\b|\bhora$/.test(query);
+    const asksDate = (!asksAboutPastCV && /\b(que dia es|que dia estamos|en que dia|que fecha|a cuantos estamos|fecha actual|fecha de hoy|dia de hoy|dia de la semana|que mes es|que ano es|en que ano estamos|hoy que|hoy es)\b|\bhoy$/.test(query)) || (asksTime && /\b(fecha|dia|hoy)\b/.test(query));
+    if (asksTime || asksDate) {
+      const now = new Date();
+      const zone = "Europe/Madrid";
+      const date = new Intl.DateTimeFormat("es-ES", { timeZone: zone, weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(now);
+      const time = new Intl.DateTimeFormat("es-ES", { timeZone: zone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(now);
+      return {
+        reply: (asksDate ? "Hoy es " + date + ". " : "") + (asksTime ? "Son las " + time + ". " : "") + "Referencia: hora de Madrid (Europe/Madrid).",
+        actions: []
+      };
+    }
+
+    if (/quien eres|como (te llamas|funcionas)|tu nombre|eres (una? )?(ia|inteligencia|chatbot)|eres reynaldo|tus datos|privacidad|\bapi\b|modelo de (ia|lenguaje)/.test(query)) return {
+      reply: "Soy Órbita, la guía de este portfolio. Puedo contarte quién es " + ownerName + ", qué ha estudiado, qué conocimientos y proyectos publica y cómo contactar con él. Uso respuestas locales basadas en este CV; la conversación permanece en esta pestaña.",
       actions: [linkData("Explorar habilidades", "#skills"), linkData("Ver proyectos", "#proyectos")]
     };
-    if (/salari|sueldo|remuneracion|pretension|edad|nacimiento|telefono|movil|direccion|dni|casado|soltero|familia|nacionalidad/.test(query)) return {
-      reply: "Ese dato no aparece en el CV publicado. Puedes preguntar directamente a Reynaldo por email o LinkedIn.",
-      actions: linksFor("#contacto .contact-socials a, #contacto .email-link")
+    if (/como me llamo|cual es mi nombre|quien soy|mi nombre completo/.test(query)) return {
+      reply: "El nombre que figura en este CV es " + ownerName + ". Si preguntas por tu nombre como visitante, no lo conozco: esta página no te identifica.",
+      actions: [linkData("Ver su perfil", "#inicio")]
     };
-    if (/contact|correo|email|e-mail|linkedin|contrat|hablar con|escribir|entrevista/.test(query)) return {
-      reply: ["Puedes contactar con Reynaldo por email o LinkedIn.", text($("#contacto .email-link")).replace(/\s*↗$/, ""), text($("#contacto .availability"))].filter(Boolean).join("\n"),
-      actions: linksFor("#contacto .email-link, #contacto .contact-socials a[href*='linkedin']")
+    if (/nombre completo|su nombre|nombre de reynaldo|como se llama|apellido|quien es reynaldo|quien es el|de quien es (este|el) (cv|portfolio|portafolio)/.test(query)) return {
+      reply: "Este es el portfolio de " + ownerName + ". " + text($(".hero .lead")),
+      actions: [linkData("Conocer su recorrido", "#trayectoria"), linkData("Contactar", "#contacto")]
+    };
+    if (/salari|sueldo|remuneracion|pretension|\bedad\b|nacimiento|telefono|movil|direccion|\bdni\b|casado|soltero|familia|nacionalidad/.test(query)) return {
+      reply: "Ese dato no aparece en el CV publicado. Puedes preguntar directamente a Reynaldo por email o LinkedIn.",
+      actions: contactActions
+    };
+    if (/contact|correo|e\s?mail|linked\s?in|contrat|hablar con|escrib|entrevista|mandar(le)? (un )?mensaje|enviar(le)? (un )?mensaje/.test(query)) return {
+      reply: ["Puedes contactar con " + ownerName + " por email o LinkedIn.", email, availability, "El enlace de email prepara el correo en tu aplicación; el de LinkedIn abre su perfil."].filter(Boolean).join("\n"),
+      actions: contactActions
     };
     if (/disponib|incorporacion|jornada|horario|remoto|presencial|hibrid|ubicacion|donde vive/.test(query)) return {
-      reply: text($("#contacto .availability")) + ". Para acordar modalidad, ubicación o detalles de la oportunidad, contacta con Reynaldo.",
-      actions: [linkData("Ir a contacto", "#contacto")]
+      reply: availability + ". Para acordar modalidad, ubicación o detalles de la oportunidad, contacta con Reynaldo.",
+      actions: contactActions
     };
-    if (/certific|ingles|idioma|\bb2\b|actic|acredit/.test(query)) {
+    if (/certific|ingles|idioma|\bb2\b|actic|acredit|castellano|espanol|catalan|competencias (digitales|tic)/.test(query)) {
       const relevant = educationCards.filter(card => /certificado|acreditacion/.test(normalize(text(card))));
-      const selected = relevant.filter(card => /actic/.test(query) ? /actic/.test(normalize(text(card))) : /ingles|\bb2\b/.test(query) ? /ingles/.test(normalize(text(card))) : true);
+      const selected = relevant.filter(card => /actic|competencias (digitales|tic)/.test(query) ? /actic/.test(normalize(text(card))) : /ingles|\bb2\b|idioma|castellano|espanol|catalan/.test(query) ? /ingles/.test(normalize(text(card))) : true);
       return {
         reply: selected.map(card => text($("h3", card)) + ": " + text($("p", card))).join("\n\n") || "Los certificados publicados están en la sección de formación.",
         actions: selected.flatMap(card => Array.from(card.querySelectorAll("a[href]")).map(link => linkData("Certificado · " + text($("h3", card)), link.getAttribute("href"))))
       };
     }
     if (/proyecto|repositorio|github|codigo|toolkit|portfolio|portafolio|aplicacion|demo/.test(query)) return {
-      reply: projectCards.map(card => text($("h3", card)) + ": " + text($(".project-info p", card))).join("\n\n"),
-      actions: projectCards.map(card => linkData(text($("h3", card)), $(".project-bottom a", card)?.getAttribute("href"))).concat(linkData("Ver galería", "#proyectos"))
+      reply: "En la galería hay " + projectCards.length + " proyectos publicados:\n\n" + projectCards.map(card => text($("h3", card)) + ": " + text($(".project-info p", card))).join("\n\n"),
+      actions: projectCards.map(card => linkData(text($("h3", card)), $(".project-bottom a", card)?.getAttribute("href"))).concat(linksFor("#contacto .contact-socials a[href*='github']"), linkData("Ver galería", "#proyectos"))
     };
     if (matches.length) return {
       reply: matches.map(skill => skill.description || skill.title + " figura entre sus conocimientos publicados.").join("\n\n") + (/nivel|experto|senior|profesional|experiencia/.test(query) ? "\n\nEl CV no atribuye niveles o experiencia profesional adicionales a estas competencias." : ""),
       actions: [linkData("Explorar habilidades", "#skills")]
     };
-    if (/habilidad|conocim|tecnologi|lenguaje|herramienta|competenc|stack|sabe|saber|programa|capacidad/.test(query)) return {
+    if (/habilidad|conocim|tecnologi|lenguaje|herramienta|competenc|stack|que (sabe|puede hacer|domina)|capacida/.test(query)) return {
       reply: "Sus conocimientos publicados incluyen " + allSkills.filter(skill => skill.key !== "ai").map(skill => skill.title).join(", ") + ", adquiridos durante el grado. Además, cuenta con dominio de herramientas de inteligencia artificial. Puedes preguntarme por una tecnología concreta.",
       actions: [linkData("Explorar habilidades", "#skills")]
     };
+    if (/que le falta|pendiente|termin|acabad|complet|finaliz|graduad/.test(query) && degree) return {
+      reply: educationText(degree),
+      actions: [linkData("Ver formación", "#formacion")]
+    };
     if (/formacion|estudi|universidad|uoc|carrera|grado|practica|titula|academ|electrica|curso/.test(query)) return {
-      reply: educationCards.slice(0, 3).map(card => text($("h3", card)) + ": " + text($("p", card))).join("\n\n"),
+      reply: (/electrica|urv|ascensor/.test(query) ? educationCards.filter(card => /otras etapas/.test(normalize(text($("h3", card))))) : educationCards).map(educationText).join("\n\n"),
       actions: [linkData("Ver formación y certificados", "#formacion")]
     };
-    if (/experiencia|recorrido|trayectoria|trabaj|empleo|orona|eninter|mantenim|empresa|anterior|ascensor|profesional|reynaldo|quien es|perfil|presenta|resumen|busca|objetivo/.test(query)) {
+    if (/busca|buscando|objetivo|oportunidad|incorporar|que (aporta|ofrece)|interes/.test(query)) return {
+      reply: text($(".hero .lead")) + " " + availability + ".",
+      actions: contactActions
+    };
+    if (/experiencia|recorrido|trayectoria|trabaj|empleo|orona|eninter|mantenim|empresa|anterior|ascensor|profesional/.test(query)) {
       const timeline = Array.from(document.querySelectorAll("#trayectoria .timeline-item"));
-      const target = /orona|eninter|mantenim|ascensor|experiencia|anterior/.test(query) ? timeline.filter(item => /2020|2018/.test(text($(".timeline-date", item)))) : timeline.slice(0, 3);
+      const target = /orona|eninter|mantenim|ascensor|experiencia|anterior|trabajado|empresa/.test(query) ? timeline.filter(item => /2020|2018/.test(text($(".timeline-date", item)))) : timeline;
       return {
         reply: target.map(item => text($(".timeline-date", item)) + " · " + text($("h3", item)) + ". " + Array.from(item.querySelectorAll("p")).map(text).join(" ")).join("\n\n"),
         actions: [linkData("Ver su recorrido", "#trayectoria"), linkData("Contactar", "#contacto")]
       };
     }
+    if (/reynaldo|quien es|perfil|presenta|resumen|cuentame|sobre el|curriculum|\bcv\b/.test(query)) return {
+      reply: ownerName + ". " + text($(".hero .lead")) + (degree ? " " + educationText(degree) : ""),
+      actions: [linkData("Ver su recorrido", "#trayectoria"), linkData("Contactar", "#contacto")]
+    };
     if (/^(hola|buenas|buenos dias|buenas tardes|hey|hello|saludos)[!?.\s]*$/.test(query)) return {
       reply: "¡Hola! Soy Órbita. Puedo orientarte por los conocimientos, los proyectos, la formación y el contacto de Reynaldo. ¿Qué te gustaría explorar?",
       actions: [linkData("Conocimientos", "#skills"), linkData("Proyectos", "#proyectos")]

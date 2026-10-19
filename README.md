@@ -7,7 +7,7 @@ La experiencia técnica es el punto de partida; informática e IA representan la
 - index.html: todo el contenido, trayectoria, proyectos, formación y contacto.
 - styles.css: diseño, responsive, estados interactivos e impresión.
 - script.js: habilidades, filtros, menú, formulario y GSAP.
-- brand-effects.css / brand-effects.js: recorte y marco del retrato, zoom y resolución breve de letras.
+- brand-effects.css: recorte y marco del retrato, zoom del nombre completo y acento de luz al interactuar.
 - solar-system.css / solar-system.js: observatorio 3D, controles, órbitas, satélites con paneles solares y conexión con contenidos.
 - skills-orbit.css / skills-orbit.js: segundo sistema 3D para las seis habilidades; carga diferida al acercarse a la sección.
 - cosmic-background.css / cosmic-background.js: cielo estelar, nebulosidad diagonal, destellos suaves y estrellas fugaces.
@@ -48,7 +48,7 @@ El contenido permanece visible si GSAP no carga. prefers-reduced-motion desactiv
 La galería y la galaxia admiten teclado; los cambios tienen estados accesibles y anuncios. El menú móvil cierra con Escape.
 
 ## Interacciones de identidad y sistema solar
-El marco circular de la foto tiene un borde blanco de 2 px; el recorte se ajusta mediante CSS y no altera el archivo original. El nombre conserva su texto accesible mientras una capa visual resuelve caracteres durante unos 650 ms. La secuencia se cancela al retirar el cursor o perder el foco.
+El marco circular de la foto tiene un borde blanco de 2 px; el recorte se ajusta mediante CSS y no altera el archivo original. El nombre completo aumenta un 5,5 % al pasar el cursor o recibir foco de teclado, con un acento de luz y una línea tenue. Vuelve suavemente a su tamaño al salir. El texto permanece intacto, sin secuencias por letras ni desplazamiento del contenido.
 
 Three.js renderiza esferas iluminadas, el núcleo RG, anillos y un cinturón de asteroides. Las órbitas son elipses coplanares calculadas con la ecuación de Kepler y velocidades relativas proporcionales a a^(-3/2). Es una representación idealizada de gravedad central, no una simulación N-body ni un sistema solar a escala.
 
@@ -68,17 +68,17 @@ El logo vectorial RG combina las iniciales con una órbita en menta y coral. La 
 El fondo es un canvas 2D con 650–1800 estrellas según el viewport, una banda de nebulosidad y unas pocas estrellas que varían suavemente de brillo. La capa base se dibuja una vez por tamaño. Se limita a 1,35 DPR y aproximadamente 24 fps; no captura clics ni envía datos.
 Una primera estrella fugaz aparece tras unos seis segundos activos; las siguientes se espacian 10–19 segundos. La animación se detiene con la pestaña oculta y con movimiento reducido.
 El punto de Ahora tiene un latido doble continuo, independiente de las animaciones GSAP de entrada. Solo se suspende cuando no se ve, la pestaña está oculta o el visitante pide reducir movimiento.
-Los botones de selección son planetas con anillos y respuestas de luz; el acento cambia con la selección.
+Los seis botones de selección animan a la vez su superficie, anillo y satélite, con pequeños desfases. Todos los planetas 3D mantienen su órbita y giro al interactuar con los controles. Pausar la escena también pausa las decoraciones del selector; el acento cambia con la selección.
 El sistema de habilidades conserva los seis botones HTML y los textos originales como fuente. WebGL se carga al acercarse a la sección; sin soporte se mantiene la galaxia y sus controles en HTML/CSS. Esferas, materiales, satélites, anillos y lunas son gráficos generados en código.
 
 ## Órbita: guía gratuita del CV
-La mascota abre una conversación solo al pulsarla. Reconoce preguntas sencillas sobre conocimientos, proyectos, formación, certificados, experiencia, disponibilidad y redes de contacto. Lee los contenidos semánticos publicados; una pregunta sin datos suficientes remite al contacto, sin inventar.
+La mascota abre una conversación solo al pulsarla. Reconoce preguntas sencillas sobre la identidad de Reynaldo, conocimientos, proyectos, formación, certificados, experiencia, disponibilidad y redes de contacto. Lee los contenidos semánticos publicados; una pregunta sin datos suficientes remite al contacto, sin inventar. Puede facilitar enlaces directos de email y LinkedIn. La fecha y hora se calculan al responder con el reloj del dispositivo, en la zona Europe/Madrid; no se guardan fechas fijas en el código.
 Funciona en el navegador, sin API, modelo de pago, registro, cookies ni almacenamiento persistente. El historial vive exclusivamente en esta pestaña. Los mensajes se insertan como texto, y los enlaces se restringen a destinos reales del CV. No prepara ni envía mensajes a terceros.
 Escape cierra el panel; se restaura el foco. En móvil se oculta cuando el menú principal está abierto. En impresión se excluye.
 No se presenta como IA generativa: es una guía por temas con enlaces y respuestas extraídas del portfolio.
 
 ## Globo de conexiones
-El globo usa una distribución uniforme de puntos sobre los continentes, atmósfera, arcos y pulsos luminosos. Sus conexiones son una ilustración, no métricas de visitas ni ubicaciones personales.
+El globo usa una distribución uniforme de puntos sobre los continentes, atmósfera, una malla geodésica tenue y arcos con estelas luminosas. Los nodos emiten aros suaves; las conexiones siguen viajando durante el arrastre. Pausa y movimiento reducido detienen el conjunto. Sus conexiones son una ilustración, no métricas de visitas ni ubicaciones personales.
 Geografía: [Natural Earth, dominio público](https://www.naturalearthdata.com/about/terms-of-use/), incluida localmente como assets/world-land.geojson. No se reutilizan activos ni marcas de Cloudflare.
 Incluye arrastre, teclado, pausa, carga al acercarse a la sección y alternativas estáticas cuando WebGL no está disponible. Respeta movimiento reducido y deja de renderizar fuera de pantalla.
 

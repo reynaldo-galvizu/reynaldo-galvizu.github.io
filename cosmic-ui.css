@@ -27,63 +27,6 @@
   to { transform: rotateX(58deg) rotate(332deg); }
 }
 
-/* Each familiar tool has its own accent, without assigning proficiency levels. */
-.stack-strip {
-  position: relative;
-  isolation: isolate;
-  gap: 18px 34px;
-  background: linear-gradient(90deg, transparent, #bce9cd05 40%, #a8bdff05 70%, transparent);
-  overflow: hidden;
-}
-.stack-strip > span {
-  --tech-color: #bce9cd;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 5px 2px;
-  transition: color 250ms, text-shadow 250ms, transform 300ms cubic-bezier(.2,.7,.2,1);
-}
-.stack-strip > span::before {
-  display: inline-block;
-  margin-right: 12px;
-  color: var(--tech-color);
-  opacity: .72;
-  transform-origin: center;
-  transition: opacity 250ms, transform 650ms cubic-bezier(.18,.7,.2,1), filter 250ms;
-}
-.stack-strip > span::after {
-  content: "";
-  position: absolute;
-  left: 24px;
-  right: 0;
-  bottom: 2px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--tech-color), transparent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 300ms ease;
-}
-.stack-strip > span:nth-child(1) { --tech-color: #ffd46d; }
-.stack-strip > span:nth-child(2) { --tech-color: #ff977e; }
-.stack-strip > span:nth-child(3) { --tech-color: #a8bdff; }
-.stack-strip > span:nth-child(4) { --tech-color: #76d4ed; }
-.stack-strip > span:nth-child(5) { --tech-color: #dfc5fa; }
-.stack-strip > span:nth-child(6) { --tech-color: #bce9cd; }
-@media (hover: hover) and (pointer: fine) {
-  .stack-strip > span:hover {
-    color: var(--tech-color);
-    text-shadow: 0 0 20px color-mix(in srgb, var(--tech-color) 35%, transparent);
-    transform: translateY(-3px);
-  }
-  .stack-strip > span:hover::before {
-    opacity: 1;
-    transform: rotate(180deg) scale(1.18);
-    filter: drop-shadow(0 0 5px var(--tech-color));
-  }
-  .stack-strip > span:hover::after { transform: scaleX(1); }
-}
-
 /* An uninterrupted two-beat pulse, independent of one-off reveal animations. */
 .timeline-item:first-child::before {
   z-index: 2;
@@ -196,13 +139,18 @@
   pointer-events: none;
 }
 .solar-choice > i {
+  --orbit-duration: 8s;
+  --orbit-phase: -1s;
   position: relative;
   display: block;
   flex: 0 0 23px;
   width: 23px;
   height: 23px;
   border-radius: 50%;
-  background: radial-gradient(circle at 29% 25%, #fff8, transparent 35%), radial-gradient(circle at 35% 32%, var(--world-color) 10%, color-mix(in srgb, var(--world-color) 55%, #121b27) 57%, #0a101e 94%);
+  background: radial-gradient(circle at 29% 25%, #fff8, transparent 35%), repeating-linear-gradient(12deg, transparent 0 4px, #08132030 5px 7px, transparent 8px 12px), radial-gradient(circle at 35% 32%, var(--world-color) 10%, color-mix(in srgb, var(--world-color) 55%, #121b27) 57%, #0a101e 94%);
+  background-size: 100% 100%, 48px 100%, 100% 100%;
+  animation: choice-surface 16s linear infinite;
+  animation-delay: var(--orbit-phase);
   box-shadow: inset -4px -3px 6px #040811a0, 0 0 13px color-mix(in srgb, var(--world-color) 13%, transparent);
   transform-style: preserve-3d;
   transition: transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms;
@@ -216,6 +164,8 @@
   border-bottom-color: color-mix(in srgb, var(--world-color) 13%, transparent);
   border-radius: 50%;
   transform: rotate(-28deg) scaleY(.52);
+  animation: choice-ring calc(var(--orbit-duration) * 2) linear infinite;
+  animation-delay: var(--orbit-phase);
   pointer-events: none;
 }
 .solar-choice > i::after {
@@ -226,11 +176,15 @@
   border-top-color: var(--world-color);
   border-radius: 50%;
   transform: rotate(140deg) scaleY(.68);
-  animation: choice-satellite 7s linear infinite;
-  animation-play-state: paused;
+  animation: choice-satellite var(--orbit-duration) linear infinite;
+  animation-delay: var(--orbit-phase);
   pointer-events: none;
 }
-.solar-choice[data-body="java"] > i { background: radial-gradient(circle at 27% 20%, #ffdfb4 0, transparent 36%), repeating-linear-gradient(10deg, #ff977e 0 3px, #c96c5c 4px 7px); }
+.solar-choice[data-body="python"] > i { --orbit-duration: 9s; --orbit-phase: -4s; }
+.solar-choice[data-body="java"] > i { --orbit-duration: 7s; --orbit-phase: -2s; background-image: radial-gradient(circle at 27% 20%, #ffdfb4 0, transparent 36%), repeating-linear-gradient(12deg, transparent 0 3px, #8e413b66 4px 7px, transparent 8px 12px), radial-gradient(circle at 35% 32%, #ff977e 10%, #b35d53 57%, #291924 94%); }
+.solar-choice[data-body="postgres"] > i { --orbit-duration: 10s; --orbit-phase: -7s; }
+.solar-choice[data-body="docker"] > i { --orbit-duration: 8.5s; --orbit-phase: -3.5s; }
+.solar-choice[data-body="projects"] > i { --orbit-duration: 11s; --orbit-phase: -6s; }
 .solar-choice[data-body="projects"] > i::before { inset: -7px; border-width: 2px; }
 .solar-choice:hover, .solar-choice:focus-visible, .solar-choice.is-active {
   color: var(--world-color);
@@ -244,13 +198,20 @@
   transform: rotate(-12deg) scale(1.13);
   box-shadow: inset -4px -3px 6px #040811a0, 0 0 19px color-mix(in srgb, var(--world-color) 27%, transparent);
 }
-.solar-choice:hover > i::after, .solar-choice:focus-visible > i::after, .solar-choice.is-active > i::after { animation-play-state: running; }
 .solar-choice.is-active > i {
   box-shadow: inset -4px -3px 6px #040811a0, 0 0 18px color-mix(in srgb, var(--world-color) 25%, transparent);
 }
 @keyframes choice-satellite {
   from { transform: rotate(0deg) scaleY(.68); }
   to { transform: rotate(360deg) scaleY(.68); }
+}
+@keyframes choice-ring {
+  from { transform: rotate(-28deg) scaleY(.52); }
+  to { transform: rotate(332deg) scaleY(.52); }
+}
+@keyframes choice-surface {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 0 0, 48px 0, 0 0; }
 }
 @keyframes instrument-light {
   0%, 100% { opacity: .65; box-shadow: 0 0 5px #bce9cd40; }
@@ -328,11 +289,18 @@
 .cosmic-page-hidden .timeline-item:first-child::after,
 .cosmic-page-hidden .site-emblem::after,
 .cosmic-page-hidden .solar-heading i,
+.cosmic-page-hidden .solar-choice > i,
+.cosmic-page-hidden .solar-choice > i::before,
 .cosmic-page-hidden .solar-choice > i::after,
 .timeline-item[data-ui-visible="false"]::before,
 .timeline-item[data-ui-visible="false"]::after,
 .solar-system[data-ui-visible="false"] .solar-heading i,
-.solar-system[data-ui-visible="false"] .solar-choice > i::after {
+.solar-system[data-ui-visible="false"] .solar-choice > i,
+.solar-system[data-ui-visible="false"] .solar-choice > i::before,
+.solar-system[data-ui-visible="false"] .solar-choice > i::after,
+.solar-system[data-motion-paused="true"] .solar-choice > i,
+.solar-system[data-motion-paused="true"] .solar-choice > i::before,
+.solar-system[data-motion-paused="true"] .solar-choice > i::after {
   animation-play-state: paused;
 }
 
@@ -344,9 +312,6 @@
   .solar-info p { font-size: .74rem; }
 }
 @media (max-width: 760px) {
-  .stack-strip { gap: 9px 21px; padding: 17px 20px; }
-  .stack-strip > span { font-size: .67rem; }
-  .stack-strip > span::before { margin-right: 8px; }
   .solar-choice { font-size: .71rem; min-height: 55px; }
   .solar-info { min-height: 153px; }
   .solar-toolbar > p { font-size: .76rem; }
@@ -365,6 +330,7 @@
   .timeline-item:first-child::before { box-shadow: 0 0 0 5px #ff977e19; }
   .timeline-item:first-child::after { display: none; }
   .solar-choice:hover, .solar-choice:focus-visible, .solar-choice:hover > i, .solar-choice:focus-visible > i { transform: none; }
+  .solar-choice > i, .solar-choice > i::before { animation: none; }
   .solar-choice > i::after { display: none; }
   .site-emblem::after { animation: none; }
 }

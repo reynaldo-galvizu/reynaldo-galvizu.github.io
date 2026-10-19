@@ -201,9 +201,9 @@
     }
     function updateBodies(){
       bodies.forEach(body=>{
-        const mean=body.phase+time*1.45/Math.pow(body.a,1.5);let eccentric=mean;
+        const mean=body.phase+time*1.8/Math.pow(body.a,1.5);let eccentric=mean;
         for(let i=0;i<4;i++)eccentric-=(eccentric-body.e*Math.sin(eccentric)-mean)/(1-body.e*Math.cos(eccentric));
-        body.mesh.position.set(body.a*(Math.cos(eccentric)-body.e),Math.sin(mean*.8+body.index)*.035,body.a*Math.sqrt(1-body.e*body.e)*Math.sin(eccentric));body.atmosphere.position.copy(body.mesh.position);body.mesh.rotation.y=time*(.08+body.index*.018);
+        body.mesh.position.set(body.a*(Math.cos(eccentric)-body.e),Math.sin(mean*.8+body.index)*.035,body.a*Math.sqrt(1-body.e*body.e)*Math.sin(eccentric));body.atmosphere.position.copy(body.mesh.position);body.mesh.rotation.y=time*(.22+body.index*.025);
         if(body.moon){const angle=time*(.7+body.index*.04)+body.index;body.moon.position.copy(body.mesh.position);body.moon.position.x+=Math.cos(angle)*(body.r+.23);body.moon.position.z+=Math.sin(angle)*(body.r+.23);body.moon.position.y+=Math.sin(angle)*.12;}
         if(body.satellite){const angle=time*.67+body.index;body.satellite.position.copy(body.mesh.position);body.satellite.position.x+=Math.cos(angle)*(body.r+.36);body.satellite.position.z+=Math.sin(angle)*(body.r+.36);body.satellite.position.y+=Math.sin(angle)*.21;body.satellite.rotation.set(.2,angle+.6,.3);}
       });

@@ -243,7 +243,7 @@
     ripple.rotation.x=-Math.PI/2;system.add(ripple);
     const raycaster=new THREE.Raycaster();
     const pointer=new THREE.Vector2();
-    let width=1,height=1,simulationTime=0,last=0,frameId=0,visible=true,paused=false,hovered=false,focusWithin=false;
+    let width=1,height=1,simulationTime=0,last=0,frameId=0,visible=true,paused=false;
     let yaw=.12,targetYaw=.12,pitch=.9,targetPitch=.9,pointerLeanX=0,pointerLeanY=0,drag=null,pulse=2;
     const coreLabel=root.querySelector(".solar-core-label");
     const projection=new THREE.Vector3();
@@ -254,6 +254,7 @@
       camera.updateMatrixWorld();
     }
     function updatePauseButton() {
+      root.dataset.motionPaused=String(paused);
       toggle.setAttribute("aria-pressed",String(paused));
       toggle.setAttribute("aria-label",paused?"Reanudar órbitas":"Pausar órbitas");
       toggle.firstElementChild.textContent=paused?"▶":"Ⅱ";
@@ -264,12 +265,12 @@
     function positionBodies() {
       for(const b of bodies) {
         // Kepler's third law controls relative periods. Newton solves E - e sin(E) = M.
-        const mean=b.phase + simulationTime*.85/Math.pow(b.a,1.5);
+        const mean=b.phase + simulationTime*1.65/Math.pow(b.a,1.5);
         let eccentric=mean;
         for(let j=0;j<4;j++)eccentric-=(eccentric-b.e*Math.sin(eccentric)-mean)/(1-b.e*Math.cos(eccentric));
         b.mesh.position.set(b.a*(Math.cos(eccentric)-b.e),0,b.a*Math.sqrt(1-b.e*b.e)*Math.sin(eccentric));
         b.atmosphere.position.copy(b.mesh.position);
-        b.mesh.rotation.y=simulationTime*(.12+b.radius*.2);
+        b.mesh.rotation.y=simulationTime*(.26+b.radius*.3);
         if(b.moon)b.moon.position.copy(b.mesh.position).add(new THREE.Vector3(Math.cos(simulationTime*.7)*.52,.08,Math.sin(simulationTime*.7)*.52));
       }
       belt.rotation.y=simulationTime*.013;
@@ -309,7 +310,9 @@
       if(!visible||document.hidden||!renderingReady){last=0;return;}
       const dt=last?Math.min((now-last)/1000,.045):.016;last=now;
       const motion=!reduced.matches && !paused;
-      if(motion) simulationTime+=dt*(hovered || focusWithin ? .13 : 1);
+      // Browsing a planet never slows down the rest of the system. Only the
+      // explicit pause control, reduced motion or visibility suspend its clock.
+      if(motion) simulationTime+=dt;
       const damping=1-Math.exp(-dt*8);
       const desiredYaw=targetYaw+(reduced.matches?0:pointerLeanX);
       const desiredPitch=targetPitch+(reduced.matches?0:pointerLeanY);
@@ -375,8 +378,7 @@
       if(canvas.hasPointerCapture(event.pointerId))canvas.releasePointerCapture(event.pointerId);
     });
     canvas.addEventListener("pointercancel",()=>{drag=null;});
-    canvas.addEventListener("pointerenter",()=>{hovered=true;});
-    canvas.addEventListener("pointerleave",()=>{hovered=false;pointerLeanX=pointerLeanY=0;requestFrame();});
+    canvas.addEventListener("pointerleave",()=>{pointerLeanX=pointerLeanY=0;requestFrame();});
     viewport.addEventListener("keydown",event=>{
       if(event.key.startsWith("Arrow")){
         event.preventDefault();
@@ -389,8 +391,6 @@
       }else if(event.code==="Space"){event.preventDefault();toggle.click();}
       else if(event.key==="Home"){event.preventDefault();reset.click();}
     });
-    root.addEventListener("focusin",()=>{focusWithin=true;});
-    root.addEventListener("focusout",event=>{if(!root.contains(event.relatedTarget)){focusWithin=false;requestFrame();}});
     const observer=new IntersectionObserver(entries=>{
       visible=entries[0].isIntersecting;
       if(visible){last=0;requestFrame();}
