@@ -1,0 +1,374 @@
+/* Identity and observatory instruments. Load after the scene styles. */
+.site-emblem {
+  --emblem-size: 34px;
+  width: var(--emblem-size);
+  height: var(--emblem-size);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 var(--emblem-size);
+  position: relative;
+  isolation: isolate;
+}
+.site-emblem img { display: block; width: 100%; height: 100%; }
+.site-emblem::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 1px solid #bce9cd35;
+  border-top-color: #ffad8a;
+  border-radius: 50%;
+  transform: rotateX(58deg) rotate(-28deg);
+  animation: emblem-orbit 12s linear infinite;
+  pointer-events: none;
+}
+.footer-brand { display: inline-flex; gap: 10px; align-items: center; }
+.footer-brand .site-emblem { --emblem-size: 32px; }
+@keyframes emblem-orbit {
+  to { transform: rotateX(58deg) rotate(332deg); }
+}
+
+/* Each familiar tool has its own accent, without assigning proficiency levels. */
+.stack-strip {
+  position: relative;
+  isolation: isolate;
+  gap: 18px 34px;
+  background: linear-gradient(90deg, transparent, #bce9cd05 40%, #a8bdff05 70%, transparent);
+  overflow: hidden;
+}
+.stack-strip > span {
+  --tech-color: #bce9cd;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 5px 2px;
+  transition: color 250ms, text-shadow 250ms, transform 300ms cubic-bezier(.2,.7,.2,1);
+}
+.stack-strip > span::before {
+  display: inline-block;
+  margin-right: 12px;
+  color: var(--tech-color);
+  opacity: .72;
+  transform-origin: center;
+  transition: opacity 250ms, transform 650ms cubic-bezier(.18,.7,.2,1), filter 250ms;
+}
+.stack-strip > span::after {
+  content: "";
+  position: absolute;
+  left: 24px;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--tech-color), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms ease;
+}
+.stack-strip > span:nth-child(1) { --tech-color: #ffd46d; }
+.stack-strip > span:nth-child(2) { --tech-color: #ff977e; }
+.stack-strip > span:nth-child(3) { --tech-color: #a8bdff; }
+.stack-strip > span:nth-child(4) { --tech-color: #76d4ed; }
+.stack-strip > span:nth-child(5) { --tech-color: #dfc5fa; }
+.stack-strip > span:nth-child(6) { --tech-color: #bce9cd; }
+@media (hover: hover) and (pointer: fine) {
+  .stack-strip > span:hover {
+    color: var(--tech-color);
+    text-shadow: 0 0 20px color-mix(in srgb, var(--tech-color) 35%, transparent);
+    transform: translateY(-3px);
+  }
+  .stack-strip > span:hover::before {
+    opacity: 1;
+    transform: rotate(180deg) scale(1.18);
+    filter: drop-shadow(0 0 5px var(--tech-color));
+  }
+  .stack-strip > span:hover::after { transform: scaleX(1); }
+}
+
+/* An uninterrupted two-beat pulse, independent of one-off reveal animations. */
+.timeline-item:first-child::before {
+  z-index: 2;
+  background: #ffac93;
+  border-color: #ffbba5;
+  box-shadow: 0 0 10px #ff977e55;
+  animation: timeline-heartbeat 1.9s ease-in-out infinite;
+  transform-origin: center;
+}
+.timeline-item:first-child::after {
+  content: "";
+  position: absolute;
+  left: -39px;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border: 1px solid #ff977e;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: timeline-signal 1.9s ease-out infinite;
+}
+@keyframes timeline-heartbeat {
+  0%, 12%, 38%, 100% { transform: scale(1); box-shadow: 0 0 9px #ff977e55; }
+  20% { transform: scale(1.32); box-shadow: 0 0 14px #ff977e88; }
+  29% { transform: scale(1.04); }
+  34% { transform: scale(1.2); box-shadow: 0 0 12px #ff977e77; }
+}
+@keyframes timeline-signal {
+  0%, 15% { transform: scale(1); opacity: .6; }
+  70%, 100% { transform: scale(3.5); opacity: 0; }
+}
+
+/* Planet selector: individual spheres, orbit arcs and moving satellites. */
+.solar-system {
+  border-top-color: #8fbba92b;
+  border-bottom-color: #8fbba92b;
+  background: radial-gradient(ellipse at 50% 26%, #13333731, transparent 65%);
+}
+.solar-heading { padding-block: 17px; }
+.solar-heading > span:first-child { display: flex; align-items: center; }
+.solar-heading i { animation: instrument-light 3s ease-in-out infinite; }
+.solar-toolbar {
+  padding: 16px 0 0;
+  gap: 16px;
+}
+.solar-toolbar > p {
+  font-size: .76rem;
+  color: #c0c9d2;
+  max-width: 32ch;
+  line-height: 1.6;
+}
+.solar-toolbar > div { gap: 8px; }
+.solar-control {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-color: #8ba8b442;
+  background: linear-gradient(135deg, #30424844, #101a2688);
+  box-shadow: inset 0 1px 0 #e2f6ff10;
+  transition: color 220ms, border-color 220ms, box-shadow 220ms, transform 220ms;
+}
+.solar-control:hover, .solar-control:focus-visible {
+  color: #d8ffea;
+  border-color: #bce9cd99;
+  box-shadow: 0 0 22px #bce9cd12, inset 0 1px 0 #e2f6ff15;
+  transform: translateY(-2px);
+}
+.solar-control[aria-pressed="true"] {
+  background: #bce9cd14;
+  color: var(--mint);
+  border-color: #bce9cd70;
+}
+.solar-choices {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0 20px;
+}
+.solar-choice {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 11px;
+  padding: 11px 14px;
+  min-height: 54px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--world-color) 19%, #29333e);
+  background: linear-gradient(120deg, #24313a65, #121c2780);
+  font-size: .72rem;
+  letter-spacing: .015em;
+  color: #bec8d3;
+  box-shadow: inset 0 1px 0 #eafaff08;
+  transition: transform 300ms cubic-bezier(.2,.8,.2,1), border-color 250ms, box-shadow 300ms, color 220ms, background 300ms;
+}
+.solar-choice::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at var(--pointer-x) var(--pointer-y), color-mix(in srgb, var(--world-color) 15%, transparent), transparent 80%);
+  opacity: 0;
+  transition: opacity 250ms;
+  pointer-events: none;
+}
+.solar-choice > i {
+  position: relative;
+  display: block;
+  flex: 0 0 23px;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 29% 25%, #fff8, transparent 35%), radial-gradient(circle at 35% 32%, var(--world-color) 10%, color-mix(in srgb, var(--world-color) 55%, #121b27) 57%, #0a101e 94%);
+  box-shadow: inset -4px -3px 6px #040811a0, 0 0 13px color-mix(in srgb, var(--world-color) 13%, transparent);
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 300ms;
+}
+.solar-choice > i::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid color-mix(in srgb, var(--world-color) 36%, transparent);
+  border-left-color: transparent;
+  border-bottom-color: color-mix(in srgb, var(--world-color) 13%, transparent);
+  border-radius: 50%;
+  transform: rotate(-28deg) scaleY(.52);
+  pointer-events: none;
+}
+.solar-choice > i::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid transparent;
+  border-top-color: var(--world-color);
+  border-radius: 50%;
+  transform: rotate(140deg) scaleY(.68);
+  animation: choice-satellite 7s linear infinite;
+  animation-play-state: paused;
+  pointer-events: none;
+}
+.solar-choice[data-body="java"] > i { background: radial-gradient(circle at 27% 20%, #ffdfb4 0, transparent 36%), repeating-linear-gradient(10deg, #ff977e 0 3px, #c96c5c 4px 7px); }
+.solar-choice[data-body="projects"] > i::before { inset: -7px; border-width: 2px; }
+.solar-choice:hover, .solar-choice:focus-visible, .solar-choice.is-active {
+  color: var(--world-color);
+  border-color: color-mix(in srgb, var(--world-color) 64%, transparent);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--world-color) 8%, #131e2a), #101b2688);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--world-color) 20%, transparent), 0 4px 24px color-mix(in srgb, var(--world-color) 6%, transparent);
+}
+.solar-choice:hover, .solar-choice:focus-visible { transform: translateY(-3px); }
+.solar-choice:hover::before, .solar-choice:focus-visible::before, .solar-choice.is-active::before { opacity: 1; }
+.solar-choice:hover > i, .solar-choice:focus-visible > i {
+  transform: rotate(-12deg) scale(1.13);
+  box-shadow: inset -4px -3px 6px #040811a0, 0 0 19px color-mix(in srgb, var(--world-color) 27%, transparent);
+}
+.solar-choice:hover > i::after, .solar-choice:focus-visible > i::after, .solar-choice.is-active > i::after { animation-play-state: running; }
+.solar-choice.is-active > i {
+  box-shadow: inset -4px -3px 6px #040811a0, 0 0 18px color-mix(in srgb, var(--world-color) 25%, transparent);
+}
+@keyframes choice-satellite {
+  from { transform: rotate(0deg) scaleY(.68); }
+  to { transform: rotate(360deg) scaleY(.68); }
+}
+@keyframes instrument-light {
+  0%, 100% { opacity: .65; box-shadow: 0 0 5px #bce9cd40; }
+  50% { opacity: 1; box-shadow: 0 0 13px #bce9cd85; }
+}
+
+.solar-info {
+  --pointer-x: 25%;
+  --pointer-y: 0%;
+  isolation: isolate;
+  position: relative;
+  overflow: hidden;
+  min-height: 145px;
+  border: 1px solid color-mix(in srgb, var(--selected-world) 20%, #28323e);
+  border-radius: 20px 20px 20px 6px;
+  padding: 21px 22px;
+  gap: 20px;
+  background: linear-gradient(135deg, #1d2b386e, #0c152284);
+  box-shadow: inset 0 1px 0 #fff7e60a;
+  transition: border-color 400ms, box-shadow 400ms;
+}
+.solar-info::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at var(--pointer-x) var(--pointer-y), color-mix(in srgb, var(--selected-world) 9%, transparent), transparent 65%);
+  pointer-events: none;
+}
+.solar-info::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22px;
+  width: 44px;
+  height: 1px;
+  background: var(--selected-world);
+  box-shadow: 0 0 13px var(--selected-world);
+  pointer-events: none;
+  transition: background 400ms, box-shadow 400ms;
+}
+.solar-info h3 { margin: 10px 0; }
+.solar-info p { font-size: .78rem; max-width: 36ch; }
+.solar-info > a {
+  border-bottom: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  gap: 8px;
+  color: #e1e8e9;
+  font-size: .68rem;
+  transition: color 250ms;
+}
+.solar-info > a > span {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--selected-world) 35%, transparent);
+  font-size: 1.1rem;
+  color: var(--selected-world);
+  transition: transform 250ms, background 250ms, box-shadow 250ms;
+}
+.solar-info > a:hover { color: var(--selected-world); }
+.solar-info > a:hover > span { transform: translate(2px, -2px); background: #ffffff08; box-shadow: 0 0 20px #bce9cd0a; }
+.solar-info.is-changing::after { animation: selection-trace 550ms cubic-bezier(.2,.7,.2,1) both; }
+@keyframes selection-trace {
+  0% { transform: scaleX(.2); opacity: .3; }
+  60% { transform: scaleX(2.5); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+.cosmic-page-hidden .timeline-item:first-child::before,
+.cosmic-page-hidden .timeline-item:first-child::after,
+.cosmic-page-hidden .site-emblem::after,
+.cosmic-page-hidden .solar-heading i,
+.cosmic-page-hidden .solar-choice > i::after,
+.timeline-item[data-ui-visible="false"]::before,
+.timeline-item[data-ui-visible="false"]::after,
+.solar-system[data-ui-visible="false"] .solar-heading i,
+.solar-system[data-ui-visible="false"] .solar-choice > i::after {
+  animation-play-state: paused;
+}
+
+@media (min-width: 761px) and (max-width: 1100px) {
+  .solar-choice { gap: 9px; padding: 10px; font-size: .64rem; }
+  .solar-choice > i { width: 20px; height: 20px; flex-basis: 20px; }
+  .solar-choices { gap: 8px; }
+  .solar-info { padding: 18px; gap: 14px; }
+  .solar-info p { font-size: .74rem; }
+}
+@media (max-width: 760px) {
+  .stack-strip { gap: 9px 21px; padding: 17px 20px; }
+  .stack-strip > span { font-size: .67rem; }
+  .stack-strip > span::before { margin-right: 8px; }
+  .solar-choice { font-size: .71rem; min-height: 55px; }
+  .solar-info { min-height: 153px; }
+  .solar-toolbar > p { font-size: .76rem; }
+}
+@media (max-width: 410px) {
+  .solar-choices { gap: 8px; }
+  .solar-choice { gap: 8px; padding: 11px 10px; font-size: .64rem; }
+  .solar-choice > i { width: 20px; height: 20px; flex-basis: 20px; }
+  .solar-info { padding: 18px; gap: 13px; }
+  .solar-info h3 { font-size: 1.08rem; }
+  .solar-info p { font-size: .73rem; }
+  .solar-info > a { font-size: .61rem; }
+  .solar-info > a > span { width: 34px; height: 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .timeline-item:first-child::before { box-shadow: 0 0 0 5px #ff977e19; }
+  .timeline-item:first-child::after { display: none; }
+  .solar-choice:hover, .solar-choice:focus-visible, .solar-choice:hover > i, .solar-choice:focus-visible > i { transform: none; }
+  .solar-choice > i::after { display: none; }
+  .site-emblem::after { animation: none; }
+}
+@media print {
+  .site-emblem, .timeline-item:first-child::after { display: none !important; }
+  .timeline-item:first-child::before { background: #333; border-color: #333; animation: none; }
+}

@@ -5,17 +5,27 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Reynaldo Galvizu Sánchez. Formación en Ingeniería Informática, Python, Java, PostgreSQL, Docker, microservicios y herramientas de IA. Explora mi trayectoria y proyectos.">
   <meta name="theme-color" content="#10151c">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/favicon-180.png" sizes="180x180">
   <title>Reynaldo Galvizu · Una nueva órbita</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="brand-effects.css">
   <link rel="stylesheet" href="solar-system.css">
+  <link rel="stylesheet" href="skills-orbit.css">
+  <link rel="stylesheet" href="cosmic-background.css">
+  <link rel="stylesheet" href="cosmic-ui.css">
   <script defer src="assets/vendor/gsap.min.js"></script>
   <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
   <script defer src="script.js"></script>
   <script defer src="brand-effects.js"></script>
   <script defer src="solar-system.js"></script>
+  <script defer src="skills-orbit.js"></script>
+  <script defer src="cosmic-background.js"></script>
+  <script defer src="cosmic-ui.js"></script>
 </head>
 <body>
+<div class="cosmic-sky" aria-hidden="true"><canvas id="cosmic-background"></canvas><div class="cosmic-vignette"></div></div>
 <a class="skip" href="#contenido">Saltar al contenido</a>
 <div class="reading-progress" aria-hidden="true"></div>
 <header class="header">
@@ -76,7 +86,7 @@
   </div>
 </section>
 <section id="skills" class="section skills-section">
-  <div class="section-heading reveal"><div><p class="eyebrow">Skills Galaxy</p><h2>Mi universo<br>de <em>conocimientos.</em></h2></div><p>Selecciona una habilidad y descubre su lugar en mi formación. Sin barras de nivel: conocimientos con contexto.</p></div>
+  <div class="section-heading reveal"><div><p class="eyebrow">Skills Galaxy</p><h2>Mi universo<br>de <em>conocimientos.</em></h2></div><p>Cada planeta conecta una habilidad con mi formación. Selecciona uno y explora su contexto.</p></div>
   <div class="skills-layout">
     <div class="galaxy" role="group" aria-label="Explorar habilidades">
       <div class="galaxy-rings" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -133,6 +143,6 @@
   <noscript><p>Para contactar, escribe directamente a <a href="mailto:reynaldo.gs@hotmail.com">reynaldo.gs@hotmail.com</a>.</p></noscript>
 </section>
 </main>
-<footer><a href="#inicio">Reynaldo Galvizu<span class="brand-dot">.</span></a><span>Curiosidad en movimiento.</span><a href="#inicio">Volver al inicio ↑</a></footer>
+<footer><a class="footer-brand" href="#inicio"><span class="site-emblem" aria-hidden="true"><img src="assets/logo-mark.svg" width="32" height="32" alt=""></span><span>Reynaldo Galvizu<span class="brand-dot">.</span></span></a><span>Curiosidad en movimiento.</span><a href="#inicio">Volver al inicio ↑</a></footer>
 </body>
 </html>

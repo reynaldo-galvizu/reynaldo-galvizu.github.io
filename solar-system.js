@@ -153,6 +153,40 @@
 
     const labelLayer = root.querySelector(".solar-labels");
     const bodies = [];
+    const spacecraft = [];
+    const panelCanvas = document.createElement("canvas");
+    panelCanvas.width=64; panelCanvas.height=64;
+    const panelContext=panelCanvas.getContext("2d");
+    panelContext.fillStyle="#13376d"; panelContext.fillRect(0,0,64,64);
+    panelContext.strokeStyle="#71b5d4"; panelContext.lineWidth=1;
+    for(let x=1;x<64;x+=10){panelContext.beginPath();panelContext.moveTo(x,0);panelContext.lineTo(x,64);panelContext.stroke();}
+    for(let y=1;y<64;y+=16){panelContext.beginPath();panelContext.moveTo(0,y);panelContext.lineTo(64,y);panelContext.stroke();}
+    const panelTexture=new THREE.CanvasTexture(panelCanvas);
+    panelTexture.colorSpace=THREE.SRGBColorSpace;
+    const panelMaterial=new THREE.MeshStandardMaterial({map:panelTexture,metalness:.45,roughness:.38,side:THREE.DoubleSide});
+    const chassisMaterial=new THREE.MeshStandardMaterial({color:0xf0d39b,metalness:.7,roughness:.35});
+    function createSatellite(body, phase, orbitRadius) {
+      const satellite=new THREE.Group();
+      const chassis=new THREE.Mesh(new THREE.BoxGeometry(.13,.12,.13),chassisMaterial);
+      satellite.add(chassis);
+      for(const sign of [-1,1]){
+        const panel=new THREE.Mesh(new THREE.BoxGeometry(.24,.012,.19),panelMaterial);
+        panel.position.x=sign*.22;
+        satellite.add(panel);
+        const arm=new THREE.Mesh(new THREE.CylinderGeometry(.009,.009,.13,6),chassisMaterial);
+        arm.rotation.z=Math.PI/2;arm.position.x=sign*.1;satellite.add(arm);
+      }
+      const antenna=new THREE.Mesh(new THREE.CylinderGeometry(.005,.005,.14,6),chassisMaterial);
+      antenna.position.y=.11;satellite.add(antenna);
+      const dish=new THREE.Mesh(new THREE.SphereGeometry(.065,12,8,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:0xdce6e4,side:THREE.DoubleSide,metalness:.5,roughness:.4}));
+      dish.position.y=.17;dish.rotation.z=.35;dish.scale.y=.4;satellite.add(dish);
+      system.add(satellite);
+      const trail=[];
+      for(let i=0;i<=70;i++){const angle=i/70*Math.PI*2;trail.push(new THREE.Vector3(Math.cos(angle)*orbitRadius,Math.sin(angle)*orbitRadius*.32,Math.sin(angle)*orbitRadius));}
+      const track=new THREE.Line(new THREE.BufferGeometry().setFromPoints(trail),new THREE.LineBasicMaterial({color:0xa9d0d5,transparent:true,opacity:.13}));
+      system.add(track);
+      spacecraft.push({satellite,body,phase,orbitRadius,track});
+    }
     const selectableMeshes = [];
     const sphereGeometry = new THREE.SphereGeometry(1, 28, 20);
     const pointsForOrbit = (item,count=160) => {
@@ -190,8 +224,10 @@
         const moon = new THREE.Mesh(new THREE.SphereGeometry(.065,12,10),new THREE.MeshStandardMaterial({color:0xb7cbcc,roughness:1}));
         system.add(moon);body.moon=moon;
       }
+      if(id==="docker" || id==="python") createSatellite(body,id==="docker"?1.7:4,.62+item.radius*.5);
       bodies.push(body);
     }
+    root.dataset.satelliteCount=String(spacecraft.length);
     // A quiet asteroid belt gives scale without extra planet labels.
     const asteroidGeometry = new THREE.IcosahedronGeometry(.012,0);
     const belt=new THREE.InstancedMesh(asteroidGeometry,new THREE.MeshBasicMaterial({color:0x647b70,transparent:true,opacity:.55}),220);
@@ -238,6 +274,13 @@
       }
       belt.rotation.y=simulationTime*.013;
       sun.rotation.y=simulationTime*.06;
+      for(const craft of spacecraft){
+        const angle=simulationTime*.7+craft.phase;
+        craft.satellite.position.copy(craft.body.mesh.position).add(new THREE.Vector3(Math.cos(angle)*craft.orbitRadius,Math.sin(angle)*craft.orbitRadius*.32,Math.sin(angle)*craft.orbitRadius));
+        craft.satellite.lookAt(craft.body.mesh.position);
+        craft.satellite.rotation.z+=.3;
+        craft.track.position.copy(craft.body.mesh.position);
+      }
     }
     function projectLabels() {
       for(const b of bodies) {

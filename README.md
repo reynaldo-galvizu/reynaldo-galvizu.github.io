@@ -8,7 +8,11 @@ La experiencia técnica es el punto de partida; informática e IA representan la
 - styles.css: diseño, responsive, estados interactivos e impresión.
 - script.js: habilidades, filtros, menú, formulario y GSAP.
 - brand-effects.css / brand-effects.js: recorte y marco del retrato, zoom y resolución breve de letras.
-- solar-system.css / solar-system.js: observatorio 3D, controles, órbitas y conexión con contenidos.
+- solar-system.css / solar-system.js: observatorio 3D, controles, órbitas, satélites con paneles solares y conexión con contenidos.
+- skills-orbit.css / skills-orbit.js: segundo sistema 3D para las seis habilidades; carga diferida al acercarse a la sección.
+- cosmic-background.css / cosmic-background.js: cielo estelar, nebulosidad diagonal, destellos suaves y estrellas fugaces.
+- cosmic-ui.css / cosmic-ui.js: selectores planetarios, colores al pasar el cursor y latido continuo de Ahora.
+- assets/favicon.svg, favicon-32.png y favicon-180.png: emblema RG para pestañas y accesos directos. logo-mark.svg se usa en la web.
 - assets/vendor/: GSAP 3.13.0, ScrollTrigger y Three.js 0.180.0. Se conservan las cabeceras de licencia y THREE-LICENSE.txt.
 - assets/foto-cv.png: foto solo en cabecera; zoom discreto al pasar el cursor.
 - assets/certificado-ingles-b2-uoc.pdf: certificado existente.
@@ -55,6 +59,14 @@ Three.js renderiza esferas iluminadas, el núcleo RG, anillos y un cinturón de 
 
 Las órbitas y sus etiquetas se proyectan desde las mismas coordenadas 3D. La escala de planetas es visual, no un indicador del nivel de dominio de una habilidad.
 Three.js: https://threejs.org/docs/
+
+## Cielo, identidad e instrumentos
+El logo vectorial RG combina las iniciales con una órbita en menta y coral. La pestaña usa iconos estáticos SVG/PNG por compatibilidad; la versión dentro de la web tiene una órbita animada.
+El fondo es un canvas 2D con 650–1800 estrellas según el viewport, una banda de nebulosidad y unas pocas estrellas que varían suavemente de brillo. La capa base se dibuja una vez por tamaño. Se limita a 1,35 DPR y aproximadamente 24 fps; no captura clics ni envía datos.
+Una primera estrella fugaz aparece tras unos seis segundos activos; las siguientes se espacian 10–19 segundos. La animación se detiene con la pestaña oculta y con movimiento reducido.
+El punto de Ahora tiene un latido doble continuo, independiente de las animaciones GSAP de entrada. Solo se suspende cuando no se ve, la pestaña está oculta o el visitante pide reducir movimiento.
+Los botones de selección son planetas con anillos y respuestas de luz; el acento cambia con la selección.
+El sistema de habilidades conserva los seis botones HTML y los textos originales como fuente. WebGL se carga al acercarse a la sección; sin soporte se mantiene la galaxia y sus controles en HTML/CSS. Esferas, materiales, satélites, anillos y lunas son gráficos generados en código.
 
 ## Contacto
 El formulario valida los campos y prepara un enlace mailto. NO envía mensajes por sí solo, no guarda datos y no comunica éxito de envío. Requiere una aplicación de correo configurada. El email y LinkedIn son alternativas permanentes.
